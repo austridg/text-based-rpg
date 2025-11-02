@@ -3,7 +3,7 @@
 
 // constructor
 Character::Character(string n, int l, float max, float h, float a, float d)
-    : name(n), level(l), maxHp(max), hp(h), atk(a), def(d), isAlive(true), isDefending(false), exp(0), nextLevel(nextLevelFormula(l)), expDrop(expDropFormula(l)) {};
+    : name(n), level(l), maxHp(max), hp(h), atk(a), def(d), isAlive(true), isDefending(false), exp(0), nextLevel(nextLevelFormula(l)), expDrop(expDropFormula(l)), isMagic(false) {};
 
 // destructor
 Character::~Character() {};

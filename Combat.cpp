@@ -18,7 +18,7 @@ void Combat::endInfo(Character* w,Character* l) const {
     cout << "WINNER: " << w->getName() << endl;
     cout << "====================================" << endl << endl;
 
-    // TODO - Print XP, LVL, etc.
+    // TODO - Print XP, LVL, etc. 
 
 }
 

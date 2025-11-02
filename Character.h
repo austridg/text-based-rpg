@@ -18,6 +18,7 @@ protected:
     float def;
     float isAlive;
     float isDefending;
+    bool isMagic;
 public:
     // Constructor / Destructor
     Character(string n,int l, float maxH,float h,float a,float d);
