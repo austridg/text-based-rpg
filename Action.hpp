@@ -19,16 +19,21 @@ inline void action(Character* source,Character* target,Skill* skill) {
         else { target->setHp(target->getHp() - points); }
     }
     else if (skill->getSkillType() == restoreHp) { 
-        computeRestorePoints(skill->getPoints(),source->getAtk());
+        computeRestorePoints(skill->getPoints(),source->getMaxResource());
         if (target->getMaxHp() < points) { target->setHp(target->getMaxHp()); }
         else { target->setHp(target->getHp() + points); }
     }
     else if (skill->getSkillType() == damageResource) {
+        computeAttackPoints(skill->getPoints(),source->getMaxResource(),target->getDef(),target->getIsDefending());
         if (target->getResource() <= points) { target->setResource(0); }
         else { target->setResource(target->getResource() - points); }
     }
-    else { // restoreResource
+    else if (skill->getSkillType() == restoreResource) {
+        computeRestorePoints(skill->getPoints(),source->getMaxResource());
         if (target->getMaxResource() < points) { target->setResource(target->getMaxResource()); }
         else { target->setResource(target->getResource() + points); }
+    }
+    else if (skill->getSkillType() == buffAtk) {
+        
     }
 }

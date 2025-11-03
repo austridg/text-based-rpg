@@ -6,6 +6,8 @@
 #include "formulas.hpp"
 #include "Skill.h"
 #include "Skills.hpp"
+#include "Stat.hpp"
+
 using namespace std;
 
 class Character {
@@ -17,17 +19,16 @@ protected:
     float expDrop;
     float maxHp;
     float hp;
-    float maxResource;
+    float maxResource; // TODO - Mana or Stamina Refactor
     float resource;
-    float atk;
-    float def;
     bool isAlive;
     bool isDefending;
     bool isMagic;
+    vector<Stat> stats; // TODO - Refine Stats Vector Functionality
     vector<Skill> skills;
 public:
     // Constructor / Destructor
-    Character(string n,int l, float maxH,float h,float maxR,float r,float a,float d);
+    Character(string n,int l, float maxH,float h,float maxR,float r);
 
     virtual ~Character();
 

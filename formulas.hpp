@@ -14,8 +14,8 @@ constexpr int debuffDef = 8;
 inline constexpr float nextLevelFormula(int level) { return level * 125; }
 inline constexpr float expDropFormula(int level) { return level * 600; }
 inline constexpr float expDropBossFormula(int level) { return level * 103.7; }
-inline constexpr float computeAttackPoints(float basePoints,float sourceAtk,float targetDef,bool isDefending) { 
-    (isDefending) ? (sourceAtk*0.2)*basePoints - targetDef*1.5 : (sourceAtk*0.2)*basePoints - targetDef; 
+inline constexpr float computeAttackPoints(float basePoints,float sourceStat,float targetDef,bool isDefending) { 
+    (isDefending) ? (sourceStat*0.2)*basePoints - targetDef*1.5 : (sourceStat*0.2)*basePoints - targetDef; 
 }
 inline constexpr float computeRestorePoints(float basePoints,float sourceAtk) { return (sourceAtk*0.125)*basePoints; } // NEEDS ADJUSTMENTS
 
@@ -24,6 +24,13 @@ inline constexpr float warriorHp(int level) { return 250 + level * 8; }
 inline constexpr float warriorResource(int level) { 50 + level * 8; }
 inline constexpr float warriorAtk(int level) { return 15 + level * 4; }
 inline constexpr float warriorDef(int level) { return 7 + level * 3; }
+
+// Mage
+inline constexpr float mageHp(int level) { return 180 + level * 6; }
+inline constexpr float mageResource(int level) { return 60 + level * 9; }
+inline constexpr float mageAtk(int level) { return 9 + level * 2; }
+inline constexpr float mageDef(int level) { return 5 + level * 2; }
+inline constexpr float mageMagic(int level) { return 15 + level * 4; }
 
 // Enemy
 inline constexpr float enemyHp(int level) { return 250 + level * 5; }
