@@ -1,7 +1,7 @@
 #ifndef MAGE_H
 #define MAGE_H
 
-#include "character/Character.h"
+#include "Character/Character.h"
 
 class Mage : public Character {
 public:

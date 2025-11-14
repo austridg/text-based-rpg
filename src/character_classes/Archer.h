@@ -1,7 +1,7 @@
 #ifndef ARCHER_H
 #define ARCHER_H
 
-#include "character/Character.h"
+#include "Character/Character.h"
 
 class Archer : public Character {
 public:

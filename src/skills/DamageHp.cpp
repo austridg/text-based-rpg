@@ -1,5 +1,5 @@
 #include "DamageHp.h"
-#include "character/Character.h"
+#include "Character/Character.h"
 
 DamageHp::DamageHp(bool magic,float p, float c, TargetType tt)
     : Skill(magic,p,c,tt) {}

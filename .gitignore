@@ -1,0 +1,8 @@
+# ignore all the .o files that get made in compilation to avoid clutter
+./src/skills/*.o
+./src/combat/*.o
+./src/character_classes/*.o
+./src/Character/*.o
+
+# ignore the compiled binary, also to reduce clutter
+./text_rpg.exe
