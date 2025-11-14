@@ -7,9 +7,9 @@ class Character;
 
 class BuffDef : public Skill {
 public:
-    BuffDef(bool magic, float p, float c);
+    BuffDef(bool magic, float p, float c, TargetType tt);
 
-    void useSkill(Character& source, Character& target) override;
+    void useSkill(Character* source, Character* target) override;
 };
 
 #endif

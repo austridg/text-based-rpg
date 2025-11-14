@@ -7,9 +7,9 @@ class Character;
 
 class DamageHp : public Skill {
 public:
-    DamageHp(bool magic, float p, float c);
+    DamageHp(bool magic, float p, float c, TargetType tt);
 
-    void useSkill(Character& source, Character& target) override;
+    void useSkill(Character* source, Character* target) override;
 };
 
 #endif

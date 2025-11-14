@@ -10,15 +10,19 @@
 #include "character_classes/Enemy.h"
 #include "character_classes/Boss.h"
 #include "combat/Combat.h"
+#include "party/Party.h"
 
 class Game {
 private:
-    Warrior* player;
-    vector<Character*> arena;
+    Party playerParty;
+    vector<Party> arena;
     int currentIndex;
 public:
-    Game(const string& n);
+    Game(vector<Character*> party);
     ~Game();
+
+    vector<Character*> createEnemyParty(int level);
+    vector<Character*> createPlayerParty();
 
     void gameLoop();
 };

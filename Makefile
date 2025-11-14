@@ -8,8 +8,9 @@ TARGET := text_rpg.exe
 SRCS := \
     src/main.cpp \
     src/Game.cpp \
-    src/Character/Character.cpp \
+    src/character/character.cpp \
     src/combat/Combat.cpp \
+    src/combat/Action.cpp \
     src/skills/Skill.cpp \
     src/skills/DamageHp.cpp \
     src/skills/BuffDef.cpp \
@@ -19,7 +20,7 @@ SRCS := \
     src/character_classes/Healer.cpp \
     src/character_classes/Archer.cpp \
     src/character_classes/Enemy.cpp \
-    src/character_classes/Boss.cpp
+    src/character_classes/Boss.cpp \
 
 OBJS := $(SRCS:.cpp=.o)
 

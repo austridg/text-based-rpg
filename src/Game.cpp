@@ -1,17 +1,42 @@
 #include "Game.h"
 
-Game::Game(const string& n) 
-    : player(new Warrior(n,4)), currentIndex(0) {
-    
-    arena.push_back(new Enemy("Rat",1));
-    arena.push_back(new Enemy("Goblin",2));
-    arena.push_back(new Enemy("Skeleton",3));
-    arena.push_back(new Boss("Boss Man",4));
+Game::Game(vector<Character*> party) 
+    : playerParty(Party(party)) {
+
+    arena.emplace_back(createEnemyParty(1));
+    arena.emplace_back(createEnemyParty(2));
+    arena.emplace_back(createEnemyParty(3));
+
+    vector<Character*> bossParty;
+    bossParty.emplace_back(Boss("Boss Man",4));
+
+    arena.emplace_back(bossParty);
 }
 
-Game::~Game() {
-    delete player;
-    for (int i = 0; i < arena.size(); i++) { delete arena[i]; }
+vector<Character*> Game::createEnemyParty(int level) {
+    vector<Character*> party;
+
+    party.emplace_back(Enemy("Enemy 1",level));
+    party.emplace_back(Enemy("Enemy 2",level));
+    party.emplace_back(Enemy("Enemy 3",level));
+    party.emplace_back(Enemy("Enemy 4",level));
+
+    return party;
+}
+
+vector<Character*> Game::createPlayerParty() {
+
+    for (int i = 0; i < 4; i++) {
+        string name;
+
+        cout << "Party Member " << i + 1 << ": " << endl;
+        cout << "Name: ";
+        cin >> name;
+
+        cout << "Choose Class for " << name << ": " << endl;
+        // TODO - Get Class
+    }
+
 }
 
 void Game::gameLoop() {

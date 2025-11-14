@@ -28,24 +28,15 @@ float Character::getResistance() const { return stats.resistance; }
 bool Character::getIsMagic() const { return isMagic; }
 bool Character::getIsAlive() const { return isAlive; }
 bool Character::getIsDefending() const { return isDefending; }
+const vector<Skill*>& Character::getSkills() { return skills; }
 
 // setters
 void Character::setHp(float h) { stats.hp = h; }
-void Character::setResource(float r) { resource = r; }
+void Character::setResource(float r) { (r < 0) ? resource = 0 : resource = r; }
 void Character::setAttack(float atk) { stats.attack = atk; }
 void Character::setDefense(float def) { stats.defense = def; }
 void Character::setIsAlive(bool b) { isAlive = b; }
 void Character::setIsDefending(bool b) { isDefending = b; }
-
-void Character::performAction(Character& target, Skill& skill) {
-    // check if character can use skill
-    skill.canUse(*this);
-
-    // decrease resource
-    setResource(stats.resource - skill.getCost());
-
-    
-}
 
 void Character::fullHeal() {
     if (!isAlive) return;
@@ -61,7 +52,7 @@ void Character::defend() {
 }
 
 // reset
-void Character::reset() {
+void Character::resetIsDefending() {
     if (isDefending) { isDefending = false; }
 }
 
@@ -72,8 +63,8 @@ void Character::levelUp() {
     this->setDefStat();
 }
 
-void Character::canLevel(Character& target) {
-    exp += target.getExpDrop();
+void Character::canLevel(float xp) {
+    exp += xp;
 
     if (exp >= nextLevel) {
         float difference = exp - nextLevel;
@@ -91,4 +82,10 @@ void Character::printInfo() const {
     cout << "ATK: " << stats.attack << endl;
     cout << "DEF: " << stats.defense << endl;
     cout << "STATUS: " << (isAlive ? "Alive" : "Dead") << endl;
+}
+
+void Character::printSkills() const {
+    for (int i = 0; i < skills.size(); i++) {
+        cout << i + 1 << ") " << skills[i] << endl;
+    }
 }
