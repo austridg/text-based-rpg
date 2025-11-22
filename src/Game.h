@@ -18,11 +18,14 @@ private:
     vector<Party> arena;
     int currentIndex;
 public:
-    Game(vector<Character*> party);
+    Game();
     ~Game();
 
     vector<Character*> createEnemyParty(int level);
-    vector<Character*> createPlayerParty();
+    
+    void createPlayerParty();
+
+    void printMenu() const;
 
     void gameLoop();
 };

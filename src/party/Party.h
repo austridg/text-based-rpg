@@ -8,6 +8,8 @@ class Party {
 private:
     vector<Character*> party;
 public:
+    Party() = default;
+
     Party(vector<Character*> members);
 
     vector<Character*> getParty() const;
@@ -21,6 +23,8 @@ public:
     void insertMember(Character* member);
 
     void removeMember(int index);
+
+    void healParty();
 
     bool getIsAlive() const;
 };

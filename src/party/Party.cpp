@@ -25,6 +25,12 @@ void Party::removeMember(int index) {
     party.erase(party.begin() + index);
 }
 
+void Party::healParty() {
+    for(int i = 0; i < party.size(); i++) {
+        party[i]->fullHeal();
+    }
+}
+
 bool Party::getIsAlive() const {
     for (int i = 0; i < party.size(); i++) {
         if(party[i]->getIsAlive()) { return true; }
