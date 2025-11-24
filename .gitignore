@@ -3,6 +3,7 @@
 ./src/combat/*.o
 ./src/character_classes/*.o
 ./src/Character/*.o
+./src/*.o
 
 # ignore the compiled binary, also to reduce clutter
 ./text_rpg.exe

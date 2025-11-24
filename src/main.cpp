@@ -11,6 +11,7 @@ int main() {
     Game game;
     
     game.createPlayerParty();
+    game.gameLoop();
 
     return 0;
 }

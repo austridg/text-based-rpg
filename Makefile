@@ -8,13 +8,13 @@ TARGET := text_rpg.exe
 SRCS := \
     src/main.cpp \
     src/Game.cpp \
-    src/character/character.cpp \
+    src/character/Character.cpp \
     src/combat/Combat.cpp \
     src/combat/Action.cpp \
     src/skills/Skill.cpp \
     src/skills/DamageHp.cpp \
     src/skills/BuffDef.cpp \
-    src/skills/Skills.cpp \
+    src/skills/SkillList.cpp \
     src/character_classes/Warrior.cpp \
     src/character_classes/Mage.cpp \
     src/character_classes/Healer.cpp \

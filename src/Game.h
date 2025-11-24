@@ -15,6 +15,7 @@
 class Game {
 private:
     Party playerParty;
+    Party bossParty;
     vector<Party> arena;
     int currentIndex;
 public:

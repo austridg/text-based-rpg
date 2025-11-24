@@ -6,10 +6,23 @@ Game::Game() {
     arena.emplace_back(createEnemyParty(2));
     arena.emplace_back(createEnemyParty(3));
 
-    vector<Character*> bossParty;
-    bossParty.emplace_back(Boss("Boss Man",4));
+    bossParty.insertMember(new Boss("Boss Man",4));
 
     arena.emplace_back(bossParty);
+}
+
+Game::~Game() {
+    // delete player party
+    for (int i = 0; i < playerParty.getPartySize(); i++) {
+        delete playerParty[i];
+    }
+
+    // delete arena
+    for (int i = 0; i < arena.size(); i++) {
+        for (int j = 0; i < arena[i].getPartySize(); j++) {
+            delete arena[i].getParty()[j];
+        }
+    }
 }
 
 // TODO - Make More Sophisticated
@@ -20,21 +33,22 @@ vector<Character*> Game::createEnemyParty(int level) {
 
     vector<Character*> party;
 
-    party.emplace_back(Enemy("Enemy 1",level));
-    party.emplace_back(Enemy("Enemy 2",level));
-    party.emplace_back(Enemy("Enemy 3",level));
-    party.emplace_back(&Enemy("Enemy 4",level));
+    party.emplace_back(new Enemy("Enemy 1",level));
+    party.emplace_back(new Enemy("Enemy 2",level));
+    party.emplace_back(new Enemy("Enemy 3",level));
+    party.emplace_back(new Enemy("Enemy 4",level));
 
     return party;
 }
 
 void Game::createPlayerParty() {
-
     vector<Character*> party;
-
     int choice;
 
+    // create player party
     for (int i = 0; i < 4; i++) {
+        Character* newPartyMember;
+
         // prompt for member name
         string name;
         cout << "Party Member " << i + 1 << ": " << endl;
@@ -50,34 +64,22 @@ void Game::createPlayerParty() {
             cout << "3) Archer\n";
             cout << "4) Healer\n";
             cin >> choice;
-            
-            switch(choice) {
-                case 1:
-                    party.emplace_back(Warrior(name,1));
-                    endLoop = true;
-                    break;
-                case 2:
-                    party.emplace_back(Mage(name,1));
-                    endLoop = true;
-                    break;
-                case 3:
-                    party.emplace_back(Archer(name,1));
-                    endLoop = true;
-                    break;
-                case 4:
-                    party.emplace_back(Healer(name,1));
-                    endLoop = true;
-                    break;
-                default:
-                    cout << "Invalid Option.";
-                    break;
-            }
+
+            if (choice < 1 || choice > 4) { cout << "Invalid Option.\n"; }
+
+            endLoop = true;
         }
-        
-        playerParty = party;
-        return;
+
+        if (choice == 1) { newPartyMember = new Warrior(name,1); }
+        if (choice == 2) { newPartyMember = new Mage(name,1); }
+        if (choice == 3) { newPartyMember = new Archer(name,1); }
+        if (choice == 4) { newPartyMember = new Healer(name,1); }
+
+        playerParty.insertMember(newPartyMember);
 
     }
+
+    playerParty = party;
 
 }
 
@@ -90,9 +92,10 @@ void Game::printMenu() const {
 }
 
 void Game::gameLoop() {
+    int choice;
+
     bool endGame{};
     while (!endGame) {
-        int choice;
 
         // get player choice
         printMenu();
@@ -120,13 +123,13 @@ void Game::gameLoop() {
                 }
                 break;
             case 2:
-                // TODO - Print All Members Info
+                playerParty.printPartyInfo();
                 break;
             case 3:
-                // TODO - Quit
+                endGame = true;
                 break;
             default:
-                // TODO - Error Handle
+                cout << "Invalid Option.\n";
                 break;
         }
     }
