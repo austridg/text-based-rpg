@@ -60,64 +60,32 @@ void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty,
     }
 }
 
-Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
-    getValidTargets(source, skill,playerParty,enemyParty);
+Character* Combat::getPlayerTarget(size_t choice) {
     Character* target = nullptr;
 
-    while(true) {
-        cout << "Choose your target: " << endl;
-        for (size_t i = 0; i < validTargets.size(); i++) {
-            cout << i+1 << ") " << validTargets[i]->getName()
-                << " | HP: " << validTargets[i]->getHp() << " / " << validTargets[i]->getMaxHp() << endl;
-        }
+    if(choice == validTargets.size() + 1) { return target; }
 
-        cout << validTargets.size() + 1 << ") [CANCEL]\n";
-        cout << ">";
-
-        size_t choice;
-        cin >> choice;
-
-        if(choice == validTargets.size() + 1) { return target; }
-
-        if(choice > 0 && choice <= validTargets.size()) {
-            target = validTargets[choice - 1];
-            return target;
-        }
-        else { cout << "Invalid Option.\n"; }
+    if(choice > 0 && choice <= validTargets.size()) {
+        target = validTargets[choice - 1];
+        return target;
     }
+    else { cout << "Invalid Option.\n"; }
 }
 
 // player turn
-Skill* Combat::getPlayerSkill(Character* source) {
-    // temp variable for vector or skills
+Skill* Combat::getPlayerSkill(Character* source,size_t choice) {
     const vector<Skill*>& skillList = source->getSkills();
     Skill* pickedSkill = nullptr;
 
-    // prompt for player's choice
-    while(true) {
-        // print player's turn
-        cout << source->getName() << "'s Turn:\n";
+    if (choice == skillList.size() + 1) { return pickedSkill; }
 
-        // print out useable skills
-        source->printSkills();
+    if (choice > 0 && choice <= skillList.size()) { // valid choice | return picked skill
+        pickedSkill = skillList[choice - 1]; // offset by 1
 
-        cout << skillList.size() + 1 << ") [CANCEL]\n";
-        cout << ">";
-
-        // get player choice
-        size_t choice;
-        cin >> choice;
-
-        if (choice == skillList.size() + 1) { return pickedSkill; }
-
-        if (choice > 0 && choice <= skillList.size()) { // valid choice | return picked skill
-            pickedSkill = skillList[choice - 1]; // offset by 1
-
-            if(pickedSkill->canUse(source)) return pickedSkill;
-            else { pickedSkill->cantUse(source); }
-        }
-        else { cout << "Invalid Option.\n"; }
+        if(pickedSkill->canUse(source)) return pickedSkill;
+        else { pickedSkill->cantUse(source); }
     }
+    else { cout << "Invalid Option.\n"; }
 }
 
 Character* Combat::getEnemyTarget(Character* source, Skill* skill) {
@@ -156,8 +124,14 @@ void Combat::performAction(Character* source, Character* target, Skill* skill) {
 
 void Combat::processTurn() {
     // TODO - reset or decrement status effect for player party
-
     // get choice from each player party member
+    while(menuIndex <= playerParty.getPartySize()) {
+        if (!playerParty[menuIndex]->getIsAlive()) { menuIndex++; continue; }
+
+        size_t choice = skillMenu(playerParty[menuIndex]);
+        if (choice == playerParty[menuIndex]->getSkills().size() + 1) {  } // back option
+    }
+
     for (size_t i = 0; i < playerParty.getPartySize(); i++ ) {
         if (!playerParty[i]->getIsAlive()) { continue; }
 
@@ -204,6 +178,45 @@ void Combat::processTurn() {
 
     turnCount++;
 
+}
+
+size_t Combat::skillMenu(Character* source) {
+    const vector<Skill*>& skillList = source->getSkills();
+
+    // prompt for player's choice
+    while(true) {
+        // print player's turn
+        cout << source->getName() << "'s Turn:\n";
+
+        // print out useable skills
+        source->printSkills();
+
+        if (menuIndex > 0) { cout << skillList.size() + 1 << ") [BACK]\n"; }
+        cout << skillList.size() + 2 << ") [CANCEL]\n";
+        cout << ">";
+
+        // get player choice
+        size_t choice;
+        cin >> choice;
+    }
+}
+
+size_t Combat::targetMenu(Character* source, Skill* skill) {
+    getValidTargets(source, skill,playerParty,enemyParty);
+
+    while(true) {
+        cout << "Choose your target: " << endl;
+        for (size_t i = 0; i < validTargets.size(); i++) {
+            cout << i+1 << ") " << validTargets[i]->getName()
+                << " | HP: " << validTargets[i]->getHp() << " / " << validTargets[i]->getMaxHp() << endl;
+        }
+
+        cout << validTargets.size() + 1 << ") [CANCEL]\n";
+        cout << ">";
+
+        size_t choice;
+        cin >> choice;
+    }
 }
 
 int Combat::battleMenu() {

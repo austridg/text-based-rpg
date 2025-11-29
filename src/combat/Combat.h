@@ -12,6 +12,7 @@ struct Combat {
     Party enemyParty;
     vector<Character*> validTargets;
     int turnCount;
+    int menuIndex;
     queue<Action> actionQueue;
 
     Combat(Party player, Party enemy);
@@ -22,8 +23,8 @@ struct Combat {
 
     void getValidTargets(Character* source, Skill* skill, Party sourceParty, Party opposingParty);
 
-    Character* getPlayerTarget(Character* source, Skill* skill);
-    Skill* getPlayerSkill(Character* source);
+    Character* getPlayerTarget(size_t choice);
+    Skill* getPlayerSkill(Character* source,size_t choice);
 
     Character* getEnemyTarget(Character* source, Skill* skill);
     Skill* getEnemySkill(Character* source);
@@ -33,6 +34,9 @@ struct Combat {
     void processTurn();
 
     int battleMenu();
+
+    size_t skillMenu(Character* source);
+    size_t targetMenu(Character* source,Skill* skill);
 
     bool combatLoop();
 };
