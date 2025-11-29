@@ -1,11 +1,11 @@
 #include "Combat.h"
 #include <cstdlib>
-#include <queue>
-
 
 // constructor
 Combat::Combat(Party player, Party enemy)
-    : playerParty(player), enemyParty(enemy), turnCount(1) {}
+    : playerParty(player), enemyParty(enemy), turnCount(1) {
+        actionQueue = queue<Action>();
+    }
 
 // print info
 void Combat::printTurn() const {
@@ -62,6 +62,7 @@ void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty,
 
 Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
     getValidTargets(source, skill,playerParty,enemyParty);
+    Character* target = nullptr;
 
     while(true) {
         cout << "Choose your target: " << endl;
@@ -69,13 +70,18 @@ Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
             cout << i+1 << ") " << validTargets[i]->getName()
                 << " | HP: " << validTargets[i]->getHp() << " / " << validTargets[i]->getMaxHp() << endl;
         }
+
+        cout << validTargets.size() + 1 << ") [CANCEL]\n";
         cout << ">";
 
         size_t choice;
         cin >> choice;
 
+        if(choice == validTargets.size() + 1) { return target; }
+
         if(choice > 0 && choice <= validTargets.size()) {
-            return validTargets[choice - 1];
+            target = validTargets[choice - 1];
+            return target;
         }
         else { cout << "Invalid Option.\n"; }
     }
@@ -85,7 +91,7 @@ Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
 Skill* Combat::getPlayerSkill(Character* source) {
     // temp variable for vector or skills
     const vector<Skill*>& skillList = source->getSkills();
-    Skill* pickedSkill;
+    Skill* pickedSkill = nullptr;
 
     // prompt for player's choice
     while(true) {
@@ -95,11 +101,14 @@ Skill* Combat::getPlayerSkill(Character* source) {
         // print out useable skills
         source->printSkills();
 
+        cout << skillList.size() + 1 << ") [CANCEL]\n";
         cout << ">";
 
         // get player choice
         size_t choice;
         cin >> choice;
+
+        if (choice == skillList.size() + 1) { return pickedSkill; }
 
         if (choice > 0 && choice <= skillList.size()) { // valid choice | return picked skill
             pickedSkill = skillList[choice - 1]; // offset by 1
@@ -145,18 +154,20 @@ void Combat::performAction(Character* source, Character* target, Skill* skill) {
     if(target->getHp() <= 0) { target->setIsAlive(false); cout << target->getName() << " has fallen!\n"; }
 }
 
-void Combat::processTurn(Party player, Party enemy) {
-    // action queue
-    queue<Action> actionQueue;
-
-    // PLAYER MOVE
+void Combat::processTurn() {
     // TODO - reset or decrement status effect for player party
 
     // get choice from each player party member
-    for (size_t i = 0; i < player.getPartySize(); i++ ) {
-        Skill* skill = getPlayerSkill(player[i]);
-        Character* target = getPlayerTarget(player[i],skill);
-        actionQueue.push(Action(player[i],target,skill));
+    for (size_t i = 0; i < playerParty.getPartySize(); i++ ) {
+        if (!playerParty[i]->getIsAlive()) { continue; }
+
+        Skill* skill = getPlayerSkill(playerParty[i]);
+        if (skill == nullptr) { actionQueue = queue<Action>(); return; }
+
+        Character* target = getPlayerTarget(playerParty[i],skill);
+        if (target == nullptr) { actionQueue = queue<Action>(); return; }
+
+        actionQueue.push(Action(playerParty[i],target,skill));
     }
 
     // perform actions
@@ -173,10 +184,12 @@ void Combat::processTurn(Party player, Party enemy) {
     // TODO - reset or decrement status effect for enemy party
 
     // get choice from each player party member
-    for (size_t i = 0; i < enemy.getPartySize(); i++) {
-        Skill* skill = getEnemySkill(enemy[i]);
-        Character* target = getEnemyTarget(enemy[i],skill);
-        actionQueue.push(Action(enemy[i],target,skill));
+    for (size_t i = 0; i < enemyParty.getPartySize(); i++) {
+        if (!enemyParty[i]->getIsAlive()) { continue; }
+
+        Skill* skill = getEnemySkill(enemyParty[i]);
+        Character* target = getEnemyTarget(enemyParty[i],skill);
+        actionQueue.push(Action(enemyParty[i],target,skill));
     }
 
     // perform actions
@@ -189,7 +202,19 @@ void Combat::processTurn(Party player, Party enemy) {
         actionQueue.pop();
     }
 
+    turnCount++;
 
+}
+
+int Combat::battleMenu() {
+    int choice;
+
+    cout << "Choose what to do:\n";
+    cout << "1) Fight\n";
+    cout << "2) Battle Info\n";
+
+    cin >> choice;
+    return choice;
 }
 
 // combat loop
@@ -199,18 +224,24 @@ bool Combat::combatLoop() {
 
     battleStart();
 
-    cout << "==== Player Party =====\n";
-    playerParty.printPartyInfo();
-    cout << endl << "==== Enemy Party =====\n";
-    enemyParty.printPartyInfo();
-    cout << endl;
-
     while(playerParty.getIsAlive() && enemyParty.getIsAlive()) {
         printTurn();
 
-        processTurn(playerParty,enemyParty);
-
-        turnCount++;
+        switch(battleMenu()) {
+            case 1:
+                processTurn();
+                break;
+            case 2:
+                cout << "==== Player Party =====\n";
+                playerParty.printPartyInfo();
+                cout << endl << "==== Enemy Party =====\n";
+                enemyParty.printPartyInfo();
+                cout << endl;
+                break;
+            default:
+                cout << "Invalid Option.\n";
+                break;
+        }
     }
 
     if (playerParty.getIsAlive()) { 

@@ -1,3 +1,4 @@
+#include "Terminal.hpp"
 #include "Game.h"
 #include <iostream>
 #include <cstdlib>
@@ -6,7 +7,9 @@
 int main() {
     srand(time(0));
 
-    cout << "===== WELCOME =====\n\n";
+    terminal::setup();
+
+    cout << terminal::foreground(terminal::red) << "===== WELCOME =====\n\n" << terminal::reset;
 
     Game game;
     

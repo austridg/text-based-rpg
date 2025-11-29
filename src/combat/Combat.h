@@ -5,12 +5,14 @@
 #include "../party/Party.h"
 #include "Action.h"
 #include <iostream>
+#include <queue>
 
 struct Combat {
     Party playerParty;
     Party enemyParty;
     vector<Character*> validTargets;
     int turnCount;
+    queue<Action> actionQueue;
 
     Combat(Party player, Party enemy);
 
@@ -28,7 +30,9 @@ struct Combat {
 
     void performAction(Character* source,Character* target,Skill* skill);
 
-    void processTurn(Party player, Party enemy);
+    void processTurn();
+
+    int battleMenu();
 
     bool combatLoop();
 };
