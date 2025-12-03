@@ -63,13 +63,12 @@ void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty,
 Character* Combat::getPlayerTarget(size_t choice) {
     Character* target = nullptr;
 
-    if(choice == validTargets.size() + 1) { return target; }
-
     if(choice > 0 && choice <= validTargets.size()) {
         target = validTargets[choice - 1];
-        return target;
     }
     else { cout << "Invalid Option.\n"; }
+
+    return target;
 }
 
 // player turn
@@ -126,7 +125,7 @@ void Combat::processTurn() {
     // TODO - reset or decrement status effect for player party
     // get choice from each player party member
     while(menuIndex <= playerParty.getPartySize()) {
-        if (!playerParty[menuIndex]->getIsAlive()) { menuIndex++; continue; }
+        if (!playerParty[menuIndex]->getIsAlive()) { menuIndex++; continue; } // skip dead party members
 
         size_t choice = skillMenu(playerParty[menuIndex]);
         if (choice == playerParty[menuIndex]->getSkills().size() + 1) {  } // back option
@@ -135,7 +134,7 @@ void Combat::processTurn() {
     for (size_t i = 0; i < playerParty.getPartySize(); i++ ) {
         if (!playerParty[i]->getIsAlive()) { continue; }
 
-        Skill* skill = getPlayerSkill(playerParty[i]);
+        Skill* skill = getPlayerSkill(playerParty[i],);
         if (skill == nullptr) { actionQueue = queue<Action>(); return; }
 
         Character* target = getPlayerTarget(playerParty[i],skill);
@@ -191,13 +190,19 @@ size_t Combat::skillMenu(Character* source) {
         // print out useable skills
         source->printSkills();
 
+        // print back option
         if (menuIndex > 0) { cout << skillList.size() + 1 << ") [BACK]\n"; }
+
+        // print cancel option
         cout << skillList.size() + 2 << ") [CANCEL]\n";
+
         cout << ">";
 
         // get player choice
         size_t choice;
         cin >> choice;
+
+        if (choice <= 0 || choice > skillList.size() + 2) {  }
     }
 }
 
