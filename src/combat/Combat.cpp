@@ -1,4 +1,5 @@
 #include "Combat.h"
+#include "../menu/Menu.h"
 #include <cstdlib>
 #include <queue>
 
@@ -193,13 +194,20 @@ void Combat::processTurn(Party player, Party enemy) {
         actionQueue.pop();
     }
 
-
 }
 
 // combat loop
 bool Combat::combatLoop() {
     Party* winner;
     Party* loser;
+
+    vector<Command> fightMenuOptions;
+    fightMenuOptions.push_back({"Party Stats",[this]() { playerParty.printPartyInfo(); }});
+
+    std::string tempString = "string";
+
+    Menu mainMenu("string",fightMenuOptions);
+    mainMenu.runMenu();
 
     battleStart();
 

@@ -11,6 +11,7 @@ SRCS := \
     src/character/Character.cpp \
     src/combat/Combat.cpp \
     src/combat/Action.cpp \
+    src/menu/Menu.cpp \
     src/party/Party.cpp \
     src/skills/Skill.cpp \
     src/skills/DamageHp.cpp \
