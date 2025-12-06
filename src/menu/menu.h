@@ -1,25 +1,15 @@
-#pragma once
-
-#include "command.h"
+#include <functional>
 #include <string>
-#include <vector>
+
+struct Command {
+    std::string name;
+    std::function<void()> command;
+};
 
 class Menu {
-private:
-    std::vector<Command*> menuItems;
-    std::string message;
 public:
-    Menu(std::string msg);
+    std::string menuMessage;
+    std::vector<Command> options;
 
-    void getMenuMessage() const;
-};
-
-class MainMenu : public Menu {
-public:
-    MainMenu(std::string msg);
-};
-
-class SkillMenu : public Menu {
-public:
-    SkillMenu(std::string msg);
+    Menu(std::string& msg,std::vector<Command>& opts);
 };
