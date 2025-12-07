@@ -1,19 +1,14 @@
 #include "MenuManager.h"
+#include <cstdlib>
 
 MenuManager::MenuManager() {
-    Menu mainMenu("Choose an Option",std::vector<Command>{
-        {"Fight",[this]() { nextMenu(createFightMenu()); }},
-        {"Print Party Stats",[]() { }},
-        {"Quit",[]() { }}
-    });
-
-    menuStack.push(mainMenu);
 }
 
-Menu MenuManager::createMainMenu() {
-    Menu mainMenu("Choose an Option",std::vector<Command>{
-        {"Fight",[this]() { nextMenu(createFightMenu()); }},
-        {"Print Party Stats",[]() {  }},
-        {"Quit",[]() { }}
+void MenuManager::createMainMenu(Party &party) {
+    menuStack.emplace("Choose an Option:\n",std::vector<Command>{
+        {"Fight",[this]() { createFightMenu(); }},
+        {"Print Party Stats",[party]() { party.printPartyInfo(); }},
+        {"Quit",[this]() { exit(0); }}
     });
 }
+

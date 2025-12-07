@@ -12,6 +12,8 @@
 #include "character_classes/Boss.h"
 #include "combat/Combat.h"
 #include "party/Party.h"
+#include "menu/Menu.h"
+#include "menu/MenuManager.h"
 
 class Game {
 private:

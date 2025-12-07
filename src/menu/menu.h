@@ -1,6 +1,8 @@
 #include <functional>
 #include <string>
 
+enum class MenuState { FIGHT_MENU, SELECT_SKILL_MENU, SELECT_TARGET_MENU };
+
 struct Command {
     std::string name;
     std::function<void()> command;

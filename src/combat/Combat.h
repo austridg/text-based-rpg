@@ -6,8 +6,6 @@
 #include "Action.h"
 #include <iostream>
 
-enum class MenuState { FIGHT_MENU, SELECT_SKILL_MENU, SELECT_TARGET_MENU };
-
 struct Combat {
     Party playerParty;
     Party enemyParty;

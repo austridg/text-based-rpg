@@ -2,6 +2,7 @@
 
 #include <stack>
 #include "Menu.h"
+#include "../Party/Party.h"
 
 class MenuManager {
 private:
@@ -12,6 +13,8 @@ public:
     void nextMenu(const Menu &menu);
     void prevMenu();
 
-    Menu createMainMenu();
-    Menu createFightMenu();
+    void createMainMenu(Party &party);
+    void createFightMenu();
+    void createSelectSkillMenu();
+    void createSelectTargetMenu();
 };

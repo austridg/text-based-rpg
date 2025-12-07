@@ -94,6 +94,7 @@ void Game::clearConsole() const {
 }
 
 void Game::gameLoop() {
+    MenuManager manager;
     int choice;
 
     bool endGame{};
