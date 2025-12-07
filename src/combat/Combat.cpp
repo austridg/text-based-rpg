@@ -2,11 +2,12 @@
 #include "../menu/Menu.h"
 #include <cstdlib>
 #include <queue>
+#include <stack>
 
 
 // constructor
 Combat::Combat(Party player, Party enemy)
-    : playerParty(player), enemyParty(enemy), turnCount(1) {}
+    : playerParty(player), enemyParty(enemy), turnCount(1), currentMenuState(MenuState::FIGHT_MENU) {}
 
 // print info
 void Combat::printTurn() const {
@@ -135,6 +136,22 @@ Skill* Combat::getEnemySkill(Character* source) {
     }
 }
 
+void Combat::fightMenu() {
+    MenuState currentState = MenuState::FIGHT_MENU;
+
+    switch(currentState) {
+        case MenuState::FIGHT_MENU:
+            // Fight Menu Logic
+            break;
+        case MenuState::SELECT_SKILL_MENU:
+            // Skill Menu Logic
+            break;
+        case MenuState::SELECT_TARGET_MENU:
+            // Target Menu Logic
+            break;
+    }
+}
+
 void Combat::performAction(Character* source, Character* target, Skill* skill) {
     // decrease resource
     source->setResource(source->getResource() - skill->getCost());
@@ -204,10 +221,16 @@ bool Combat::combatLoop() {
     vector<Command> fightMenuOptions;
     fightMenuOptions.push_back({"Party Stats",[this]() { playerParty.printPartyInfo(); }});
 
-    std::string tempString = "string";
-
-    Menu mainMenu("string",fightMenuOptions);
+    Menu mainMenu("Main Menu",fightMenuOptions);
+    Menu selectSkillMenu("Select Skill",fightMenuOptions);
+    Menu selectTargetMenu("Select Target",fightMenuOptions);
     mainMenu.runMenu();
+
+    stack<Menu> menuStack;
+    menuStack.push(mainMenu);
+
+    menuStack.top().runMenu();
+    menuStack.pop();
 
     battleStart();
 

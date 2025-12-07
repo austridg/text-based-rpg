@@ -6,11 +6,14 @@
 #include "Action.h"
 #include <iostream>
 
+enum class MenuState { FIGHT_MENU, SELECT_SKILL_MENU, SELECT_TARGET_MENU };
+
 struct Combat {
     Party playerParty;
     Party enemyParty;
     vector<Character*> validTargets;
     int turnCount;
+    MenuState currentMenuState;
 
     Combat(Party player, Party enemy);
 
@@ -25,6 +28,8 @@ struct Combat {
 
     Character* getEnemyTarget(Character* source, Skill* skill);
     Skill* getEnemySkill(Character* source);
+
+    void fightMenu();
 
     void performAction(Character* source,Character* target,Skill* skill);
 

@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <vector>
+#include <stack>
 #include "Character/Character.h"
 #include "character_classes/Warrior.h"
 #include "character_classes/Mage.h"
