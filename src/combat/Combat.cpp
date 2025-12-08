@@ -136,22 +136,6 @@ Skill* Combat::getEnemySkill(Character* source) {
     }
 }
 
-void Combat::fightMenu() {
-    MenuState currentState = MenuState::FIGHT_MENU;
-
-    switch(currentState) {
-        case MenuState::FIGHT_MENU:
-            // Fight Menu Logic
-            break;
-        case MenuState::SELECT_SKILL_MENU:
-            // Skill Menu Logic
-            break;
-        case MenuState::SELECT_TARGET_MENU:
-            // Target Menu Logic
-            break;
-    }
-}
-
 void Combat::performAction(Character* source, Character* target, Skill* skill) {
     // decrease resource
     source->setResource(source->getResource() - skill->getCost());

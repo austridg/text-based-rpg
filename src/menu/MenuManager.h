@@ -14,7 +14,7 @@ public:
     void prevMenu();
 
     void createMainMenu(Party &party);
-    void createFightMenu();
+    void createFightMenu(Party &playerParty,Party &enemyParty);
     void createSelectSkillMenu();
     void createSelectTargetMenu();
 };
