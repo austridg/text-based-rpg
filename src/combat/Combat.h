@@ -23,7 +23,7 @@ struct Combat {
     void endInfo(Party *winner) const;
     void battleStart() const;
 
-    void getValidTargets(Character* source, Skill* skill, Party sourceParty, Party opposingParty);
+    void getValidTargets(Party sourceParty, Party opposingParty);
 
     Character* getPlayerTarget();
     void getPlayerSkill();

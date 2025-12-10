@@ -39,7 +39,7 @@ void Combat::battleStart() const {
     cout << endl << "====================================" << endl << endl;
 }
 
-void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty, Party opposingParty) {
+void Combat::getValidTargets(Party sourceParty, Party opposingParty) {
     validTargets.clear();
     
     switch (skill->getTargetType()) {
