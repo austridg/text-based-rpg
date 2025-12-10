@@ -62,7 +62,7 @@ void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty,
     }
 }
 
-Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
+Character* Combat::getPlayerTarget() {
     getValidTargets(source, skill,playerParty,enemyParty);
 
     while(true) {
@@ -84,7 +84,7 @@ Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
 }
 
 // player turn
-Skill* Combat::getPlayerSkill(Character* source) {
+Skill* Combat::getPlayerSkill() {
     // temp variable for vector or skills
     const vector<Skill*>& skillList = source->getSkills();
     Skill* pickedSkill;
@@ -158,8 +158,8 @@ void Combat::processTurn(Party player, Party enemy) {
     for (size_t i = 0; i < player.getPartySize(); i++ ) {
         if (!player[i]->getIsAlive()) { continue; }
 
-        Skill* skill = getPlayerSkill(player[i]);
-        Character* target = getPlayerTarget(player[i],skill);
+        Skill* skill = getPlayerSkill();
+        Character* target = getPlayerTarget();
         actionQueue.push(Action(player[i],target,skill));
     }
 

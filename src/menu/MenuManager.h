@@ -4,7 +4,6 @@
 #include "Menu.h"
 #include "../combat/Combat.h"
 #include "../game/GameData.h"
-#include <initializer_list>
 
 class MenuManager {
 private:

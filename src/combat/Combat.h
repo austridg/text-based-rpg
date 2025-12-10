@@ -14,6 +14,7 @@ struct Combat {
     queue<Action> actionQueue;
     Character* source;
     Character* target;
+    Skill* skill;
     MenuState currentMenuState;
 
     Combat(Party player, Party enemy);
@@ -24,8 +25,8 @@ struct Combat {
 
     void getValidTargets(Character* source, Skill* skill, Party sourceParty, Party opposingParty);
 
-    Character* getPlayerTarget(Character* source, Skill* skill);
-    Skill* getPlayerSkill(Character* source);
+    Character* getPlayerTarget();
+    Skill* getPlayerSkill();
 
     Character* getEnemyTarget(Character* source, Skill* skill);
     Skill* getEnemySkill(Character* source);

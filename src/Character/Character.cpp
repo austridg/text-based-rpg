@@ -50,7 +50,7 @@ void Character::fullHeal() {
 void Character::defend() {
     isDefending = true;
 
-    cout << name << " is now defending!\n";
+    std::cout << name << " is now defending!\n";
 }
 
 // reset
@@ -78,21 +78,21 @@ void Character::canLevel(float xp) {
 
 // print info
 void Character::printInfo() const {
-    cout << "===== " << name << " ( ";
+    std::cout << "===== " << name << " ( ";
     printClass();
-    cout << " ) =====\n";
-    cout << "LEVEL: " << stats.level << " (" << exp << "exp / " << nextLevel << "exp)" << " | ";
-    cout << "HP: " << stats.hp << " / " << stats.maxHp << " | ";
-    cout << "ATK: " << stats.attack << " | ";
-    cout << "DEF: " << stats.defense << " | ";
-    cout << "MAG: " << stats.magic << " | ";
-    cout << "RES: " << stats.resistance << " | ";
-    cout << "STATUS: " << (isAlive ? "Alive" : "Dead");
-    cout << endl;
+    std::cout << " ) =====\n";
+    std::cout << "LEVEL: " << stats.level << " (" << exp << "exp / " << nextLevel << "exp)" << " | ";
+    std::cout << "HP: " << stats.hp << " / " << stats.maxHp << " | ";
+    std::cout << "ATK: " << stats.attack << " | ";
+    std::cout << "DEF: " << stats.defense << " | ";
+    std::cout << "MAG: " << stats.magic << " | ";
+    std::cout << "RES: " << stats.resistance << " | ";
+    std::cout << "STATUS: " << (isAlive ? "Alive" : "Dead");
+    std::cout << endl;
 }
 
 void Character::printSkills() const {
     for (size_t i = 0; i < skills.size(); i++) {
-        cout << i + 1 << ") " << skills[i]->getName() << endl;
+        std::cout << i + 1 << ") " << skills[i]->getName() << endl;
     }
 }
