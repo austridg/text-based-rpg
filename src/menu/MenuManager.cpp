@@ -92,6 +92,8 @@ void MenuManager::createSelectTargetMenu() {
         "[BACK]",
         [this]() { menuStack.pop(); }
     });
+
+    menuStack.emplace("Choose a Target: ",targetMenuOptions);
 }
 
 // TODO - Add checks for party index - no dead members allowed to pick skill
@@ -146,3 +148,6 @@ bool MenuManager::prevPartyMember() {
 
 // ------------------------------------->
 
+void MenuManager::run() {
+    while(!menuStack.empty()) menuStack.top().runMenu();
+}

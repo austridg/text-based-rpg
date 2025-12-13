@@ -62,59 +62,8 @@ void Combat::getValidTargets(Party sourceParty, Party opposingParty) {
     }
 }
 
-Character* Combat::getPlayerTarget() {
-    getValidTargets(source, skill,playerParty,enemyParty);
-
-    while(true) {
-        std::cout << "Choose your target: " << endl;
-        for (size_t i = 0; i < validTargets.size(); i++) {
-            std::cout << i+1 << ") " << validTargets[i]->getName()
-                << " | HP: " << validTargets[i]->getHp() << " / " << validTargets[i]->getMaxHp() << endl;
-        }
-        std::cout << ">";
-
-        size_t choice;
-        cin >> choice;
-
-        if(choice > 0 && choice <= validTargets.size()) {
-            return validTargets[choice - 1];
-        }
-        else { std::cout << "Invalid Option.\n"; }
-    }
-}
-
-// player turn
-void Combat::getPlayerSkill() {
-    // temp variable for vector or skills
-    const vector<Skill*>& skillList = source->getSkills();
-    Skill* pickedSkill;
-
-    // prompt for player's choice
-    while(true) {
-        // print player's turn
-        std::cout << source->getName() << "'s Turn:\n";
-
-        // print out useable skills
-        source->printSkills();
-
-        std::cout << ">";
-
-        // get player choice
-        size_t choice;
-        cin >> choice;
-
-        if (choice > 0 && choice <= skillList.size()) { // valid choice | return picked skill
-            pickedSkill = skillList[choice - 1]; // offset by 1
-
-            if(pickedSkill->canUse(source)) return pickedSkill;
-            else { pickedSkill->cantUse(source); }
-        }
-        else { std::cout << "Invalid Option.\n"; }
-    }
-}
-
 Character* Combat::getEnemyTarget(Character* source, Skill* skill) {
-    getValidTargets(source,skill,enemyParty,playerParty);
+    getValidTargets(enemyParty,playerParty);
 
     // TODO - Make more sophisticated
     while(true) {
@@ -189,19 +138,7 @@ bool Combat::combatLoop() {
     Party* winner;
     Party* loser;
 
-    // vector<Command> fightMenuOptions;
-    // fightMenuOptions.push_back({"Party Stats",[this]() { playerParty.printPartyInfo(); }});
-
-    // Menu mainMenu("Main Menu",fightMenuOptions);
-    // Menu selectSkillMenu("Select Skill",fightMenuOptions);
-    // Menu selectTargetMenu("Select Target",fightMenuOptions);
-    // mainMenu.runMenu();
-
-    // stack<Menu> menuStack;
-    // menuStack.push(mainMenu);
-
-    // menuStack.top().runMenu();
-    // menuStack.pop();
+    
 
     battleStart();
 

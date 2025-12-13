@@ -21,6 +21,10 @@ public:
     int getLastPartyIndex();
 
     void createMainMenu();
+    
+    // TODO - later
+    void createPartyMemberNameMenu();
+    void createPartyMemberClassMenu();
 
     void createFightMenu();
     void createSelectSkillMenu();

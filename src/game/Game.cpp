@@ -1,34 +1,32 @@
 #include "Game.h"
 
-Game::Game()
-    : currentIndex(0) {
+Game::Game() {
 
-    arena.emplace_back(createEnemyParty(1));
-    arena.emplace_back(createEnemyParty(2));
-    arena.emplace_back(createEnemyParty(3));
+    gameData.arena.emplace_back(createEnemyParty(1));
+    gameData.arena.emplace_back(createEnemyParty(2));
+    gameData.arena.emplace_back(createEnemyParty(3));
 
-    bossParty.insertMember(new Boss("Boss Man",4));
+    gameData.arena.emplace_back(Party(std::vector<Character*>{
+        new Boss("Boss Man",4)
+    }));
 
-    arena.emplace_back(bossParty);
+
 }
 
 Game::~Game() {
     // delete player party
-    for (size_t i = 0; i < playerParty.getPartySize(); i++) {
-        delete playerParty[i];
+    for (size_t i = 0; i < gameData.playerParty.getPartySize(); i++) {
+        delete gameData.playerParty[i];
     }
 
     // delete arena
-    for (size_t i = 0; i < arena.size(); i++) {
-        for (size_t j = 0; i < arena[i].getPartySize(); j++) {
-            delete arena[i].getParty()[j];
+    for (size_t i = 0; i < gameData.arena.size(); i++) {
+        for (size_t j = 0; i < gameData.arena[i].getPartySize(); j++) {
+            delete gameData.arena[i].getParty()[j];
         }
     }
-}
 
-Game& Game::getInstance() {
-    static Game Instance;
-    return Instance;
+    //  TODO - clear vector if you want to reuse later
 }
 
 // TODO - Make More Sophisticated
@@ -70,10 +68,10 @@ void Game::createPlayerParty() {
             else { endLoop = true; }
         }
 
-        if (choice == 1) { playerParty.insertMember(new Warrior(name,1)); }
-        if (choice == 2) { playerParty.insertMember(new Mage(name,1)); }
-        if (choice == 3) { playerParty.insertMember(new Archer(name,1)); }
-        if (choice == 4) { playerParty.insertMember(new Healer(name,1)); }
+        if (choice == 1) { gameData.playerParty.insertMember(new Warrior(name,1)); }
+        if (choice == 2) { gameData.playerParty.insertMember(new Mage(name,1)); }
+        if (choice == 3) { gameData.playerParty.insertMember(new Archer(name,1)); }
+        if (choice == 4) { gameData.playerParty.insertMember(new Healer(name,1)); }
 
         clearConsole();
 
@@ -81,26 +79,21 @@ void Game::createPlayerParty() {
 
 }
 
-void Game::printMenu() const {
-    cout << "Choose an option: \n";
-    cout << "1. Fight\n";
-    cout << "2. Print Party Stats\n";
-    cout << "3. Quit\n";
-    cout << ">";
-}
-
 void Game::clearConsole() const {
     cout << "\033[2J";
 }
 
 void Game::gameLoop() {
-    GameData* gm;
-    MenuManager manager(gm);
+    MenuManager manager(&gameData);
     int choice;
 
     bool endGame{};
     while (!endGame) {
 
-        manager.createMainMenu();
+        createPlayerParty();
 
+        manager.createMainMenu();
+        manager.run();
+
+    }
 }
