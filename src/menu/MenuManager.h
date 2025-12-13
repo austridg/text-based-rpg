@@ -2,7 +2,6 @@
 
 #include <stack>
 #include "Menu.h"
-#include "../combat/Combat.h"
 #include "../game/GameData.h"
 
 class MenuManager {
@@ -26,4 +25,6 @@ public:
     void createFightMenu();
     void createSelectSkillMenu();
     void createSelectTargetMenu();
+
+    void run();
 };

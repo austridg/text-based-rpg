@@ -94,46 +94,13 @@ void Game::clearConsole() const {
 }
 
 void Game::gameLoop() {
-    MenuManager manager;
+    GameData* gm;
+    MenuManager manager(gm);
     int choice;
 
     bool endGame{};
     while (!endGame) {
 
-        // get player choice
-        printMenu();
-        cin >> choice;
+        manager.createMainMenu();
 
-        switch(choice) {
-            case 1: {
-                cout << "Entering battle " << currentIndex + 1 << " of " << (int)arena.size() << endl;
-
-                Combat battle(playerParty, arena[currentIndex]);
-                bool result = battle.combatLoop();
-
-                if(!result) { cout << "===== GAME OVER =====\n"; break; }
-
-                playerParty.healParty();
-
-                currentIndex++;
-
-                if (currentIndex >= (int)arena.size()) { 
-                    cout << "====================================================" << endl;
-                    cout << "===== CONGRATULATIONS - YOU DEFEATED THE ARENA =====" << endl; 
-                    cout << "====================================================" << endl;
-                    endGame = true;
-                }
-                }
-                break;
-            case 2:
-                playerParty.printPartyInfo();
-                break;
-            case 3:
-                endGame = true;
-                break;
-            default:
-                cout << "Invalid Option.\n";
-                break;
-        }
-    }
 }

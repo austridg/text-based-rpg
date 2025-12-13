@@ -4,6 +4,7 @@
 #include "../character/Character.h"
 #include "../party/Party.h"
 #include "Action.h"
+#include "../menu/MenuManager.h"
 #include <iostream>
 
 struct Combat {

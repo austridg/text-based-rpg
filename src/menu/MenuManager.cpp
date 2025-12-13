@@ -45,8 +45,6 @@ void MenuManager::createSelectSkillMenu() {
         });
     }
 
-
-
     // back command - only added if not the first party member
     if(gameData->partyIndex != getFirstPartyIndex()) {
         skillMenuOptions.emplace_back(Command{
@@ -145,3 +143,6 @@ bool MenuManager::prevPartyMember() {
 
     return validPartyIndex;
 }
+
+// ------------------------------------->
+
