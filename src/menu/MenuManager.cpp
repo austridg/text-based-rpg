@@ -5,7 +5,7 @@ MenuManager::MenuManager(GameData *gm)
 :   gameData(gm) {}
 
 void MenuManager::createMainMenu() {
-    menuStack.emplace("Choose an Option:\n",std::vector<Command>{
+    menuStack.emplace("Choose an Option:",std::vector<Command>{
         {"Fight",[this]() { 
             gameData->currentBattle = Combat(gameData->playerParty,gameData->arena[gameData->arenaIndex]);
             gameData->state = GameState::BATTLE;
@@ -19,15 +19,15 @@ void MenuManager::createMainMenu() {
 
 void MenuManager::createFightMenu() {
     menuStack.emplace(
-        "Choose an Option:\n",
+        "Choose an Option:",
         std::vector<Command>{
         {"Fight",[this]() { 
             createSelectSkillMenu();
         }},
         {"Print Battle Info",[this]() { 
-            cout << "===== Player Party =====\n";
+            cout << "===== Player Party =====";
             gameData->playerParty.printPartyInfo();
-            cout << endl << "===== Enemy Party =====\n";
+            cout << endl << "===== Enemy Party =====";
             gameData->arena[gameData->arenaIndex].printPartyInfo();
         }}
     });
@@ -64,7 +64,7 @@ void MenuManager::createSelectSkillMenu() {
 
     // creating and adding menu to menuStack
     menuStack.emplace(
-        gameData->currentBattle.playerParty[gameData->partyIndex]->getName() + "\n" + "Choose a Move: \n",
+        gameData->currentBattle.playerParty[gameData->partyIndex]->getName() + "'s Turn:\n" + "Choose a Move:",
         skillMenuOptions
     );
 }

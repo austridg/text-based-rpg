@@ -90,6 +90,7 @@ void Game::gameLoop() {
     while (!gameData.endGame) {
 
         manager.run();
+        clearConsole();
 
     }
 }
