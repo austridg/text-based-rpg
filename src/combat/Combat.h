@@ -5,14 +5,14 @@
 #include "../party/Party.h"
 #include "Action.h"
 #include <iostream>
-#include <queue>
+#include <deque>
 
 struct Combat {
     Party playerParty;
     Party enemyParty;
     vector<Character*> validTargets;
     int turnCount;
-    queue<Action> actionQueue;
+    deque<Action> actionDeque;
     Character* source;
     Character* target;
     Skill* skill;

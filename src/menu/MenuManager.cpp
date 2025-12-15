@@ -58,6 +58,7 @@ void MenuManager::createSelectSkillMenu() {
             [this]() {
                 prevPartyMember();
                 createSelectSkillMenu();
+                gameData->currentBattle.actionDeque.pop_back();
             }
         });
     }
@@ -82,7 +83,7 @@ void MenuManager::createSelectTargetMenu() {
             gameData->currentBattle.validTargets[i]->getName(),
             [this,i]() {
                 gameData->currentBattle.target = gameData->currentBattle.validTargets[i];
-                gameData->currentBattle.actionQueue.push(Action(
+                gameData->currentBattle.actionDeque.push_front(Action(
                     gameData->currentBattle.source,
                     gameData->currentBattle.target,
                     gameData->currentBattle.skill
@@ -94,12 +95,16 @@ void MenuManager::createSelectTargetMenu() {
                     // if battle is over then end battle
                     if(!(gameData->currentBattle.playerParty.getIsAlive()) || !(gameData->currentBattle.enemyParty.getIsAlive())) {
                         gameData->endGame = gameData->currentBattle.endBattle();
-                        gameData->partyIndex++;
+                        gameData->partyIndex = getFirstPartyIndex();
                         menuStack.pop();
                         menuStack.pop();
                     }
                 }
-                else { menuStack.pop(); }
+                else {
+                    menuStack.pop();
+                    menuStack.pop();
+                    createSelectSkillMenu();
+                }
             }
         });
     }
@@ -107,7 +112,7 @@ void MenuManager::createSelectTargetMenu() {
     // back command
     targetMenuOptions.emplace_back(Command{
         "[BACK]",
-        [this]() { menuStack.pop(); menuStack.pop(); }
+        [this]() { menuStack.pop(); }
     });
 
     menuStack.emplace("Choose a Target: ",targetMenuOptions);

@@ -101,13 +101,13 @@ void Combat::processTurn() {
     // TODO - reset or decrement status effect for player party
     
     // perform actions
-    while(!actionQueue.empty()) {
+    while(!actionDeque.empty()) {
         performAction(
-            actionQueue.front().source,
-            actionQueue.front().target,
-            actionQueue.front().skill
+            actionDeque.front().source,
+            actionDeque.front().target,
+            actionDeque.front().skill
         );
-        actionQueue.pop();
+        actionDeque.pop_front();
     }
 
     // TODO - reset or decrement status effect for enemy party
@@ -118,17 +118,17 @@ void Combat::processTurn() {
 
         Skill* skill = getEnemySkill(enemyParty[i]);
         Character* target = getEnemyTarget();
-        actionQueue.push(Action(enemyParty[i],target,skill));
+        actionDeque.push_front(Action(enemyParty[i],target,skill));
     }
 
     // perform actions
-    while(!actionQueue.empty()) {
+    while(!actionDeque.empty()) {
         performAction(
-            actionQueue.front().source,
-            actionQueue.front().target,
-            actionQueue.front().skill
+            actionDeque.front().source,
+            actionDeque.front().target,
+            actionDeque.front().skill
         );
-        actionQueue.pop();
+        actionDeque.pop_front();
     }
 }
 
