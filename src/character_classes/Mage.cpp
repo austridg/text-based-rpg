@@ -7,9 +7,13 @@ Mage::Mage(const string& n,int level)
         stats.resource = mageResource(level);
         stats.maxResource = mageResource(level);
         stats.attack = mageAtk(level);
+        stats.maxAttack = mageAtk(level);
         stats.defense = mageDef(level);
+        stats.maxDefense = mageDef(level);
         stats.magic = mageMagic(level);
+        stats.maxMagic = mageMagic(level);
         stats.resistance = mageResistance(level);
+        stats.maxResistance = mageResistance(level);
 
         characterClass = ClassType::Mage;
     };

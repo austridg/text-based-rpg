@@ -107,6 +107,11 @@ void Combat::performAction(Character* source, Character* target, Skill* skill) {
 void Combat::processTurn() {
 
     // TODO - reset or decrement status effect for player party
+    for(size_t i = 0; i < playerParty.getPartySize(); i++) {
+        if(playerParty[i]->getDef() > playerParty[i]->getMaxDef()) {
+            playerParty[i]->setDefense(playerParty[i]->getMaxDef());
+        }
+    }
     
     // perform actions
     while(!actionDeque.empty()) {
@@ -118,16 +123,20 @@ void Combat::processTurn() {
         actionDeque.pop_front();
     }
 
-    // TODO - reset or decrement status effect for enemy party
+    for(size_t i = 0; i < enemyParty.getPartySize(); i++) {
+        if(enemyParty[i]->getDef() > enemyParty[i]->getMaxDef()) {
+            enemyParty[i]->setDefense(enemyParty[i]->getMaxDef());
+        }
+    }
 
     // get choice from each player party member
-    for (size_t i = 0; i < enemyParty.getPartySize(); i++) {
+    for(size_t i = 0; i < enemyParty.getPartySize(); i++) {
         if (!enemyParty[i]->getIsAlive()) { continue; }
 
         Skill* skill = getEnemySkill(enemyParty[i]);
         Character* target = getEnemyTarget(enemyParty[i], skill);
         if (target != nullptr) {
-            actionDeque.push_front(Action(enemyParty[i], target, skill));
+            actionDeque.push_back(Action(enemyParty[i], target, skill));
         }
     }
 
@@ -160,12 +169,12 @@ bool Combat::endBattle() {
         }
 
         endInfo(winner);
-        return true;
+        return false;
     }
     else { 
         winner = &enemyParty; 
         loser = &playerParty; 
         endInfo(winner);
-        return false;
+        return true;
     }
 }

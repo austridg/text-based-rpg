@@ -5,11 +5,14 @@ MenuManager::MenuManager(GameData *gm)
 :   gameData(gm) {}
 
 void MenuManager::createMainMenu() {
-    menuStack.emplace("Choose an Option:",std::vector<Command>{
+    menuStack.emplace("Main Choose an Option:",std::vector<Command>{
         {"Fight",[this]() { 
             gameData->currentBattle = Combat(gameData->playerParty,gameData->arena[gameData->arenaIndex]);
             gameData->state = GameState::BATTLE;
+
+            gameData->currentBattle.battleStart();
             
+            gameData->currentBattle.printTurn();
             createFightMenu();
         }},
         {"Print Party Stats",[this]() { gameData->playerParty.printPartyInfo(); }},
@@ -63,6 +66,17 @@ void MenuManager::createSelectSkillMenu() {
         });
     }
 
+    skillMenuOptions.emplace_back(Command{
+        "[CANCEL]",
+        [this]() {
+                gameData->partyIndex = getFirstPartyIndex();
+                menuStack.pop();
+                menuStack.pop();
+                gameData->currentBattle.printTurn();
+                createFightMenu();
+        }
+    });
+
     // creating and adding menu to menuStack
     menuStack.emplace(
         gameData->currentBattle.playerParty[gameData->partyIndex]->getName() + "'s Turn:\n" + "Choose a Move:",
@@ -89,7 +103,7 @@ void MenuManager::createSelectTargetMenu() {
             [this,i]() {
                 gameData->currentBattle.target = gameData->currentBattle.validTargets[i];
 
-                gameData->currentBattle.actionDeque.push_front(Action(
+                gameData->currentBattle.actionDeque.push_back(Action(
                     gameData->currentBattle.source,
                     gameData->currentBattle.target,
                     gameData->currentBattle.skill
@@ -102,9 +116,19 @@ void MenuManager::createSelectTargetMenu() {
                     if(!(gameData->currentBattle.playerParty.getIsAlive()) || !(gameData->currentBattle.enemyParty.getIsAlive())) {
                         gameData->endGame = gameData->currentBattle.endBattle();
                         gameData->partyIndex = getFirstPartyIndex();
+                        gameData->arenaIndex++;
                         menuStack.pop();
                         menuStack.pop();
+                        menuStack.pop();
+                        return;
                     }
+                    
+                    gameData->partyIndex = getFirstPartyIndex();
+                    menuStack.pop();
+                    menuStack.pop();
+                    gameData->currentBattle.turnCount++;
+                    gameData->currentBattle.printTurn();
+
                 }
                 else {
                     menuStack.pop();
@@ -119,6 +143,17 @@ void MenuManager::createSelectTargetMenu() {
     targetMenuOptions.emplace_back(Command{
         "[BACK]",
         [this]() { menuStack.pop(); }
+    });
+
+    targetMenuOptions.emplace_back(Command{
+        "[CANCEL]",
+        [this]() {
+                gameData->partyIndex = getFirstPartyIndex();
+                menuStack.pop();
+                menuStack.pop();
+                gameData->currentBattle.printTurn();
+                createFightMenu();
+        }
     });
 
     menuStack.emplace("Choose a Target: ",targetMenuOptions);

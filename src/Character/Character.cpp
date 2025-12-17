@@ -22,9 +22,13 @@ float Character::getHp() const { return stats.hp; }
 float Character::getResource() const { return stats.resource; }
 float Character::getMaxResource() const { return stats.maxResource; }
 float Character::getAtk() const { return stats.attack; }
+float Character::getMaxAtk() const { return stats.maxAttack; }
 float Character::getDef() const { return stats.defense; }
+float Character::getMaxDef() const { return stats.maxDefense; }
 float Character::getMagic() const { return stats.magic; }
+float Character::getMaxMagic() const { return stats.maxMagic; }
 float Character::getResistance() const { return stats.resistance; }
+float Character::getMaxResistance() const { return stats.maxResistance; }
 bool Character::getIsAlive() const { return isAlive; }
 bool Character::getIsDefending() const { return isDefending; }
 bool Character::getIsMagic() const { return isMagic; }

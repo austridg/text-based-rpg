@@ -90,7 +90,6 @@ void Game::gameLoop() {
     while (!gameData.endGame) {
 
         manager.run();
-        std::cout << gameData.partyIndex << std::endl;
 
     }
 }

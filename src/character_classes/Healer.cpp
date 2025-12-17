@@ -7,9 +7,13 @@ Healer::Healer(const string& n,int level)
         stats.resource = healerResource(level);
         stats.maxResource = healerResource(level);
         stats.attack = healerAtk(level);
+        stats.maxAttack = healerAtk(level);
         stats.defense = healerDef(level);
+        stats.maxDefense = healerDef(level);
         stats.magic = healerMagic(level);
+        stats.maxMagic = healerMagic(level);
         stats.resistance = healerResistance(level);
+        stats.maxResistance = healerResistance(level);
 
         characterClass = ClassType::Healer;
     };

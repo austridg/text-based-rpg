@@ -49,9 +49,13 @@ public:
     float getResource() const;
     float getMaxResource() const;
     float getAtk() const;
+    float getMaxAtk() const;
     float getDef() const;
+    float getMaxDef() const;
     float getMagic() const;
+    float getMaxMagic() const;
     float getResistance() const;
+    float getMaxResistance() const;
     bool getIsAlive() const;
     bool getIsDefending() const;
     bool getIsMagic() const;

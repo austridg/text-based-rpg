@@ -7,9 +7,13 @@ Warrior::Warrior(const string& n,int level)
         stats.resource = warriorResource(level);
         stats.maxResource = warriorResource(level);
         stats.attack = warriorAtk(level);
+        stats.maxAttack = warriorAtk(level);
         stats.defense = warriorDef(level);
+        stats.maxDefense = warriorDef(level);
         stats.magic = warriorMagic(level);
+        stats.maxMagic = warriorMagic(level);
         stats.resistance = warriorResistance(level);
+        stats.maxResistance = warriorResistance(level);
 
         isMagic = false;
 
