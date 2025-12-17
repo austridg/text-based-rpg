@@ -3,11 +3,16 @@
 #include <cstdlib>
 #include <queue>
 #include <stack>
+#include <algorithm>
+#include <utility>
 
 
 // constructor
+Combat::Combat()
+    : turnCount(1), source(nullptr), target(nullptr), skill(nullptr), winner(nullptr), loser(nullptr) {}
+
 Combat::Combat(Party player, Party enemy)
-    : playerParty(player), enemyParty(enemy), turnCount(1) {}
+    : playerParty(std::move(player)), enemyParty(std::move(enemy)), turnCount(1), source(nullptr), target(nullptr), skill(nullptr), winner(nullptr), loser(nullptr) {}
 
 // print info
 void Combat::printTurn() const {
@@ -39,12 +44,15 @@ void Combat::battleStart() const {
     std::cout << endl << "====================================" << endl << endl;
 }
 
-void Combat::getValidTargets(Party sourceParty, Party opposingParty) {
+void Combat::getValidTargets(const Party& sourceParty, const Party& opposingParty, Character* actingCharacter, Skill* actingSkill) {
     validTargets.clear();
+
+    // bail out early if there is no acting skill; prevents dereferencing garbage
+    if (actingSkill == nullptr) { return; }
     
-    switch (skill->getTargetType()) {
+    switch (actingSkill->getTargetType()) {
         case TargetType::SELF:
-            validTargets.emplace_back(source);
+            validTargets.emplace_back(actingCharacter);
             break;
         case TargetType::ONE_ALLY:
         case TargetType::ALL_ALLIES:
@@ -56,20 +64,20 @@ void Combat::getValidTargets(Party sourceParty, Party opposingParty) {
             break;
     }
 
-    for (auto it = validTargets.begin(); it != validTargets.end(); ) {
-        if (!(*it)->getIsAlive()) { it = validTargets.erase(it); }
-        else { it++; }
-    }
+    validTargets.erase(
+        std::remove_if(validTargets.begin(), validTargets.end(),
+            [](Character* c) { return c == nullptr || !c->getIsAlive(); }),
+        validTargets.end());
 }
 
-Character* Combat::getEnemyTarget() {
-    getValidTargets(enemyParty,playerParty);
+Character* Combat::getEnemyTarget(Character* actingSource, Skill* actingSkill) {
+    getValidTargets(enemyParty, playerParty, actingSource, actingSkill);
+
+    if (validTargets.empty()) { return nullptr; }
 
     // TODO - Make more sophisticated
-    while(true) {
-        size_t choice = (rand() % 100) * validTargets.size() / 100; // generate choice randomly
-        return validTargets[choice];
-    }
+    size_t choice = static_cast<size_t>(rand() % validTargets.size());
+    return validTargets[choice];
 }
 
 // enemy turn
@@ -117,8 +125,10 @@ void Combat::processTurn() {
         if (!enemyParty[i]->getIsAlive()) { continue; }
 
         Skill* skill = getEnemySkill(enemyParty[i]);
-        Character* target = getEnemyTarget();
-        actionDeque.push_front(Action(enemyParty[i],target,skill));
+        Character* target = getEnemyTarget(enemyParty[i], skill);
+        if (target != nullptr) {
+            actionDeque.push_front(Action(enemyParty[i], target, skill));
+        }
     }
 
     // perform actions

@@ -11,24 +11,24 @@ struct Combat {
     Party playerParty;
     Party enemyParty;
     vector<Character*> validTargets;
-    int turnCount;
+    int turnCount{1};
     deque<Action> actionDeque;
-    Character* source;
-    Character* target;
-    Skill* skill;
-    Party* winner;
-    Party* loser;
+    Character* source{};
+    Character* target{};
+    Skill* skill{};
+    Party* winner{};
+    Party* loser{};
 
-    Combat() = default;
+    Combat();
     Combat(Party player, Party enemy);
 
     void printTurn() const;
     void endInfo(Party *winner) const;
     void battleStart() const;
 
-    void getValidTargets(Party sourceParty, Party opposingParty);
+    void getValidTargets(const Party& sourceParty, const Party& opposingParty, Character* actingCharacter, Skill* actingSkill);
 
-    Character* getEnemyTarget();
+    Character* getEnemyTarget(Character* actingSource, Skill* actingSkill);
     Skill* getEnemySkill(Character* source);
 
     void performAction(Character* source,Character* target,Skill* skill);

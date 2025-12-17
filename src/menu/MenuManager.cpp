@@ -75,7 +75,12 @@ void MenuManager::createSelectTargetMenu() {
     std::vector<Command> targetMenuOptions;
 
     // get valid targets for current party member
-    gameData->currentBattle.getValidTargets(gameData->currentBattle.playerParty,gameData->currentBattle.enemyParty);
+    gameData->currentBattle.getValidTargets(
+        gameData->currentBattle.playerParty,
+        gameData->currentBattle.enemyParty,
+        gameData->currentBattle.playerParty[gameData->partyIndex],
+        gameData->currentBattle.skill
+    );
 
     // loop over valid targets and add them to targetMenuOptions
     for(size_t i = 0; i < gameData->currentBattle.validTargets.size(); i++) {
@@ -83,6 +88,7 @@ void MenuManager::createSelectTargetMenu() {
             gameData->currentBattle.validTargets[i]->getName(),
             [this,i]() {
                 gameData->currentBattle.target = gameData->currentBattle.validTargets[i];
+
                 gameData->currentBattle.actionDeque.push_front(Action(
                     gameData->currentBattle.source,
                     gameData->currentBattle.target,
