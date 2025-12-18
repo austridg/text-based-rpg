@@ -5,7 +5,7 @@ MenuManager::MenuManager(GameData *gm)
 :   gameData(gm) {}
 
 void MenuManager::createMainMenu() {
-    menuStack.emplace("Main Choose an Option:",std::vector<Command>{
+    menuStack.emplace("Choose an Option:",std::vector<Command>{
         {"Fight",[this]() { 
             gameData->currentBattle = Combat(gameData->playerParty,gameData->arena[gameData->arenaIndex]);
             gameData->state = GameState::BATTLE;
@@ -116,7 +116,7 @@ void MenuManager::createSelectTargetMenu() {
                 ));
 
                 // if false, there's no more party members, so invoke processTurn()
-                if(!nextPartyMember()) { 
+                if(!nextPartyMember()) {
                     clearConsole();
                     gameData->currentBattle.processTurn();
                     // if battle is over then end battle

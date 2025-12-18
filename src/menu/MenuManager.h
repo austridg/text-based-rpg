@@ -21,10 +21,6 @@ public:
     size_t getLastPartyIndex();
 
     void createMainMenu();
-    
-    // TODO - later
-    void createPartyMemberNameMenu();
-    void createPartyMemberClassMenu();
 
     void createFightMenu();
     void createSelectSkillMenu();

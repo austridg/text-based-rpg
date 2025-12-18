@@ -53,6 +53,7 @@ void Game::createPlayerParty() {
         cout << "Party Member " << i + 1 << ": " << endl;
         cout << "Name: ";
         cin >> name;
+        clearConsole();
 
         // prompt for member class
         bool endLoop{};
@@ -63,6 +64,8 @@ void Game::createPlayerParty() {
             cout << "3) Archer\n";
             cout << "4) Healer\n>";
             cin >> choice;
+
+            clearConsole();
 
             if (choice < 1 || choice > 4) { cout << "Invalid Option.\n"; }
             else { endLoop = true; }
@@ -106,4 +109,8 @@ bool Game::combatLoop() {
 
         gameData.currentBattle.turnCount++;
     }
+}
+
+void Game::clearConsole() const {
+    cout << "\033[2J";
 }

@@ -28,11 +28,11 @@ public:
     
     void createPlayerParty();
 
-    void clearConsole() const;
-
     void gameLoop();
 
     bool combatLoop();
+
+    void clearConsole() const;
 };
 
 #endif
