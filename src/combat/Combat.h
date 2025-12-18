@@ -5,32 +5,37 @@
 #include "../party/Party.h"
 #include "Action.h"
 #include <iostream>
+#include <deque>
 
 struct Combat {
     Party playerParty;
     Party enemyParty;
     vector<Character*> validTargets;
-    int turnCount;
+    int turnCount{1};
+    deque<Action> actionDeque;
+    Character* source{};
+    Character* target{};
+    Skill* skill{};
+    Party* winner{};
+    Party* loser{};
 
+    Combat();
     Combat(Party player, Party enemy);
 
     void printTurn() const;
     void endInfo(Party *winner) const;
     void battleStart() const;
 
-    void getValidTargets(Character* source, Skill* skill, Party sourceParty, Party opposingParty);
+    void getValidTargets(const Party& sourceParty, const Party& opposingParty, Character* actingCharacter, Skill* actingSkill);
 
-    Character* getPlayerTarget(Character* source, Skill* skill);
-    Skill* getPlayerSkill(Character* source);
-
-    Character* getEnemyTarget(Character* source, Skill* skill);
+    Character* getEnemyTarget(Character* actingSource, Skill* actingSkill);
     Skill* getEnemySkill(Character* source);
 
     void performAction(Character* source,Character* target,Skill* skill);
 
-    void processTurn(Party player, Party enemy);
+    void processTurn();
 
-    bool combatLoop();
+    bool endBattle();
 };
 
 #endif

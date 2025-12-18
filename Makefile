@@ -1,16 +1,18 @@
 # ====== CONFIG ======
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -Isrc
+CXXFLAGS := -std=c++17 -Wall -Wextra -Isrc -g -O0
 TARGET := text_rpg.exe
 
 # ====== FILES ======
 # Explicitly list each .cpp file (guaranteed to work)
 SRCS := \
     src/main.cpp \
-    src/Game.cpp \
+    src/game/Game.cpp \
     src/character/Character.cpp \
     src/combat/Combat.cpp \
     src/combat/Action.cpp \
+    src/menu/Menu.cpp \
+    src/menu/MenuManager.cpp \
     src/party/Party.cpp \
     src/skills/Skill.cpp \
     src/skills/DamageHp.cpp \

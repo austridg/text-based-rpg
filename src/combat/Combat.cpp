@@ -1,48 +1,58 @@
 #include "Combat.h"
+#include "../menu/Menu.h"
 #include <cstdlib>
 #include <queue>
+#include <stack>
+#include <algorithm>
+#include <utility>
 
 
 // constructor
+Combat::Combat()
+    : turnCount(1), source(nullptr), target(nullptr), skill(nullptr), winner(nullptr), loser(nullptr) {}
+
 Combat::Combat(Party player, Party enemy)
-    : playerParty(player), enemyParty(enemy), turnCount(1) {}
+    : playerParty(std::move(player)), enemyParty(std::move(enemy)), turnCount(1), source(nullptr), target(nullptr), skill(nullptr), winner(nullptr), loser(nullptr) {}
 
 // print info
 void Combat::printTurn() const {
-    cout << "===== Turn: " << turnCount << " =====\n";
+    std::cout << "===== Turn: " << turnCount << " =====\n";
 }
 
 void Combat::endInfo(Party *winners) const {
-    // cout << losers->getName() << " HAS FALLEN!" << endl;
-    cout << "====================================" << endl;
-    cout << "BATTLE HAS ENDED!" << endl;
-    cout << "WINNERS: ";
-    for (size_t i = 0; i < winners->getPartySize(); i++) { cout << (*winners)[i]->getName() << " | "; } 
-    cout << endl;
-    cout << "====================================" << endl << endl;
+    // std::cout << losers->getName() << " HAS FALLEN!" << endl;
+    std::cout << "====================================" << endl;
+    std::cout << "BATTLE HAS ENDED!" << endl;
+    std::cout << "WINNERS: ";
+    for (size_t i = 0; i < winners->getPartySize(); i++) { std::cout << (*winners)[i]->getName() << " | "; } 
+    std::cout << endl;
+    std::cout << "====================================" << endl << endl;
 
     // TODO - Print XP, LVL, etc. 
 
 }
 
 void Combat::battleStart() const {
-    cout << "====================================" << endl;
-    cout << "BATTLE HAS BEGUN!" << endl;
+    std::cout << "====================================" << endl;
+    std::cout << "BATTLE HAS BEGUN!" << endl;
     // Print Player Party
-    for (size_t i = 0; i < playerParty.getPartySize(); i++) { cout << playerParty[i]->getName() << " "; } 
-    cout << endl;
-    cout << "VS\n";
+    for (size_t i = 0; i < playerParty.getPartySize(); i++) { std::cout << playerParty[i]->getName() << " "; } 
+    std::cout << endl;
+    std::cout << "VS\n";
     // Print Enemy Party
-    for (size_t i = 0; i < enemyParty.getPartySize(); i++) { cout << enemyParty[i]->getName() << " "; } 
-    cout << endl << "====================================" << endl << endl;
+    for (size_t i = 0; i < enemyParty.getPartySize(); i++) { std::cout << enemyParty[i]->getName() << " "; } 
+    std::cout << endl << "====================================" << endl << endl;
 }
 
-void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty, Party opposingParty) {
+void Combat::getValidTargets(const Party& sourceParty, const Party& opposingParty, Character* actingCharacter, Skill* actingSkill) {
     validTargets.clear();
+
+    // bail out early if there is no acting skill; prevents dereferencing garbage
+    if (actingSkill == nullptr) { return; }
     
-    switch (skill->getTargetType()) {
+    switch (actingSkill->getTargetType()) {
         case TargetType::SELF:
-            validTargets.emplace_back(source);
+            validTargets.emplace_back(actingCharacter);
             break;
         case TargetType::ONE_ALLY:
         case TargetType::ALL_ALLIES:
@@ -54,71 +64,20 @@ void Combat::getValidTargets(Character* source, Skill* skill, Party sourceParty,
             break;
     }
 
-    for (auto it = validTargets.begin(); it != validTargets.end(); ) {
-        if (!(*it)->getIsAlive()) { it = validTargets.erase(it); }
-        else { it++; }
-    }
+    validTargets.erase(
+        std::remove_if(validTargets.begin(), validTargets.end(),
+            [](Character* c) { return c == nullptr || !c->getIsAlive(); }),
+        validTargets.end());
 }
 
-Character* Combat::getPlayerTarget(Character* source, Skill* skill) {
-    getValidTargets(source, skill,playerParty,enemyParty);
+Character* Combat::getEnemyTarget(Character* actingSource, Skill* actingSkill) {
+    getValidTargets(enemyParty, playerParty, actingSource, actingSkill);
 
-    while(true) {
-        cout << "Choose your target: " << endl;
-        for (size_t i = 0; i < validTargets.size(); i++) {
-            cout << i+1 << ") " << validTargets[i]->getName()
-                << " | HP: " << validTargets[i]->getHp() << " / " << validTargets[i]->getMaxHp() << endl;
-        }
-        cout << ">";
-
-        size_t choice;
-        cin >> choice;
-
-        if(choice > 0 && choice <= validTargets.size()) {
-            return validTargets[choice - 1];
-        }
-        else { cout << "Invalid Option.\n"; }
-    }
-}
-
-// player turn
-Skill* Combat::getPlayerSkill(Character* source) {
-    // temp variable for vector or skills
-    const vector<Skill*>& skillList = source->getSkills();
-    Skill* pickedSkill;
-
-    // prompt for player's choice
-    while(true) {
-        // print player's turn
-        cout << source->getName() << "'s Turn:\n";
-
-        // print out useable skills
-        source->printSkills();
-
-        cout << ">";
-
-        // get player choice
-        size_t choice;
-        cin >> choice;
-
-        if (choice > 0 && choice <= skillList.size()) { // valid choice | return picked skill
-            pickedSkill = skillList[choice - 1]; // offset by 1
-
-            if(pickedSkill->canUse(source)) return pickedSkill;
-            else { pickedSkill->cantUse(source); }
-        }
-        else { cout << "Invalid Option.\n"; }
-    }
-}
-
-Character* Combat::getEnemyTarget(Character* source, Skill* skill) {
-    getValidTargets(source,skill,enemyParty,playerParty);
+    if (validTargets.empty()) { return nullptr; }
 
     // TODO - Make more sophisticated
-    while(true) {
-        size_t choice = (rand() % 100) * validTargets.size() / 100; // generate choice randomly
-        return validTargets[choice];
-    }
+    size_t choice = static_cast<size_t>(rand() % validTargets.size());
+    return validTargets[choice];
 }
 
 // enemy turn
@@ -142,76 +101,85 @@ void Combat::performAction(Character* source, Character* target, Skill* skill) {
     skill->useSkill(source,target);
 
     // check if dead
-    if(target->getHp() <= 0) { target->setIsAlive(false); cout << target->getName() << " has fallen!\n"; }
+    if(target->getHp() <= 0) { target->setIsAlive(false); std::cout << target->getName() << " has fallen!\n"; }
 }
 
-void Combat::processTurn(Party player, Party enemy) {
-    // action queue
-    queue<Action> actionQueue;
+void Combat::processTurn() {
 
-    // PLAYER MOVE
-    // TODO - reset or decrement status effect for player party
+    for(size_t i = 0; i < playerParty.getPartySize(); i++) {
+        if(playerParty[i]->getDef() > playerParty[i]->getMaxDef()) {
+            playerParty[i]->setDefense(playerParty[i]->getMaxDef());
+        }
+
+        if(playerParty[i]->getAtk() > playerParty[i]->getMaxAtk()) {
+            playerParty[i]->setAttack(playerParty[i]->getMaxAtk());
+        }
+
+        if(playerParty[i]->getMagic() > playerParty[i]->getMaxMagic()) {
+            playerParty[i]->setMagic(playerParty[i]->getMaxMagic());
+        }
+
+        if(playerParty[i]->getResistance() > playerParty[i]->getMaxResistance()) {
+            playerParty[i]->setResistance(playerParty[i]->getMaxResistance());
+        }
+
+        // resource regen
+        playerParty[i]->setResource(playerParty[i]->getResource() + (0.5 * playerParty[i]->getMaxResource()));
+    }
+    
+    // perform actions
+    while(!actionDeque.empty()) {
+        performAction(
+            actionDeque.front().source,
+            actionDeque.front().target,
+            actionDeque.front().skill
+        );
+        actionDeque.pop_front();
+    }
+
+    for(size_t i = 0; i < enemyParty.getPartySize(); i++) {
+        if(enemyParty[i]->getDef() > enemyParty[i]->getMaxDef()) {
+            enemyParty[i]->setDefense(enemyParty[i]->getMaxDef());
+        }
+
+        if(enemyParty[i]->getAtk() > enemyParty[i]->getMaxAtk()) {
+            enemyParty[i]->setAttack(enemyParty[i]->getMaxAtk());
+        }
+
+        if(enemyParty[i]->getMagic() > enemyParty[i]->getMaxMagic()) {
+            enemyParty[i]->setMagic(enemyParty[i]->getMaxMagic());
+        }
+
+        if(enemyParty[i]->getResistance() > enemyParty[i]->getMaxResistance()) {
+            enemyParty[i]->setResistance(enemyParty[i]->getMaxResistance());
+        }
+
+        enemyParty[i]->setResource(enemyParty[i]->getResource() + (0.5 * enemyParty[i]->getMaxResource()));
+    }
 
     // get choice from each player party member
-    for (size_t i = 0; i < player.getPartySize(); i++ ) {
-        Skill* skill = getPlayerSkill(player[i]);
-        Character* target = getPlayerTarget(player[i],skill);
-        actionQueue.push(Action(player[i],target,skill));
+    for(size_t i = 0; i < enemyParty.getPartySize(); i++) {
+        if (!enemyParty[i]->getIsAlive()) { continue; }
+
+        Skill* skill = getEnemySkill(enemyParty[i]);
+        Character* target = getEnemyTarget(enemyParty[i], skill);
+        if (target != nullptr) {
+            actionDeque.push_back(Action(enemyParty[i], target, skill));
+        }
     }
 
     // perform actions
-    while(!actionQueue.empty()) {
+    while(!actionDeque.empty()) {
         performAction(
-            actionQueue.front().source,
-            actionQueue.front().target,
-            actionQueue.front().skill
+            actionDeque.front().source,
+            actionDeque.front().target,
+            actionDeque.front().skill
         );
-        actionQueue.pop();
+        actionDeque.pop_front();
     }
-
-    // ENEMY MOVE
-    // TODO - reset or decrement status effect for enemy party
-
-    // get choice from each player party member
-    for (size_t i = 0; i < enemy.getPartySize(); i++) {
-        Skill* skill = getEnemySkill(enemy[i]);
-        Character* target = getEnemyTarget(enemy[i],skill);
-        actionQueue.push(Action(enemy[i],target,skill));
-    }
-
-    // perform actions
-    while(!actionQueue.empty()) {
-        performAction(
-            actionQueue.front().source,
-            actionQueue.front().target,
-            actionQueue.front().skill
-        );
-        actionQueue.pop();
-    }
-
-
 }
 
-// combat loop
-bool Combat::combatLoop() {
-    Party* winner;
-    Party* loser;
-
-    battleStart();
-
-    cout << "==== Player Party =====\n";
-    playerParty.printPartyInfo();
-    cout << endl << "==== Enemy Party =====\n";
-    enemyParty.printPartyInfo();
-    cout << endl;
-
-    while(playerParty.getIsAlive() && enemyParty.getIsAlive()) {
-        printTurn();
-
-        processTurn(playerParty,enemyParty);
-
-        turnCount++;
-    }
+bool Combat::endBattle() {
 
     if (playerParty.getIsAlive()) { 
         winner = &playerParty; 
@@ -229,12 +197,12 @@ bool Combat::combatLoop() {
         }
 
         endInfo(winner);
-        return true; 
+        return false;
     }
     else { 
         winner = &enemyParty; 
         loser = &playerParty; 
         endInfo(winner);
-        return false; 
+        return true;
     }
 }

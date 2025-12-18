@@ -39,7 +39,7 @@ public:
     virtual ~Character() = default;
 
     // getters
-    const string& getName() const;
+    std::string getName() const;
     int getLevel() const;
     float getExp() const;
     float getNextLevel() const;
@@ -49,13 +49,18 @@ public:
     float getResource() const;
     float getMaxResource() const;
     float getAtk() const;
+    float getMaxAtk() const;
     float getDef() const;
+    float getMaxDef() const;
     float getMagic() const;
+    float getMaxMagic() const;
     float getResistance() const;
+    float getMaxResistance() const;
     bool getIsAlive() const;
     bool getIsDefending() const;
     bool getIsMagic() const;
     const vector<Skill*>& getSkills();
+    size_t getSkillListSize() const;
 
     // setters
     void setHp(float h);

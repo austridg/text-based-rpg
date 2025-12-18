@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../src/game/Game.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -10,7 +10,6 @@ int main() {
 
     Game game;
     
-    game.createPlayerParty();
     game.gameLoop();
 
     return 0;

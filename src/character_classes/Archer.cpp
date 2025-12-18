@@ -7,9 +7,13 @@ Archer::Archer(const string& n,int level)
         stats.resource = archerResource(level);
         stats.maxResource = archerResource(level);
         stats.attack = archerAtk(level);
+        stats.maxAttack = archerAtk(level);
         stats.defense = archerDef(level);
+        stats.maxDefense = archerDef(level);
         stats.magic = archerMagic(level);
+        stats.maxMagic = archerMagic(level);
         stats.resistance = archerResistance(level);
+        stats.maxResistance = archerResistance(level);
 
         characterClass = ClassType::Archer;
     };

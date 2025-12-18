@@ -7,9 +7,13 @@ Enemy::Enemy(const string& n,int level)
         stats.resource = enemyResource(level);
         stats.maxResource = enemyResource(level);
         stats.attack = enemyAtk(level);
+        stats.maxAttack = enemyAtk(level);
         stats.defense = enemyDef(level);
+        stats.maxDefense = enemyDef(level);
         stats.magic = enemyMagic(level);
+        stats.maxMagic = enemyMagic(level);
         stats.resistance = enemyResistance(level);
+        stats.maxResistance = enemyResistance(level);
 
         characterClass = ClassType::Enemy;
     };

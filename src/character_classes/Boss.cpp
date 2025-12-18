@@ -7,9 +7,13 @@ Boss::Boss(const string& n,int level)
         stats.resource = bossResource(level);
         stats.maxResource = bossResource(level);
         stats.attack = bossAtk(level);
+        stats.maxAttack = bossAtk(level);
         stats.defense = bossDef(level);
+        stats.maxDefense = bossDef(level);
         stats.magic = bossMagic(level);
+        stats.maxMagic = bossMagic(level);
         stats.resistance = bossResistance(level);
+        stats.maxResistance = bossResistance(level);
 
         characterClass = ClassType::Boss;
     };
