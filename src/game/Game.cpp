@@ -73,14 +73,8 @@ void Game::createPlayerParty() {
         if (choice == 3) { gameData.playerParty.insertMember(new Archer(name,1)); }
         if (choice == 4) { gameData.playerParty.insertMember(new Healer(name,1)); }
 
-        clearConsole();
-
     }
 
-}
-
-void Game::clearConsole() const {
-    cout << "\033[2J";
 }
 
 void Game::gameLoop() {

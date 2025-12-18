@@ -106,11 +106,25 @@ void Combat::performAction(Character* source, Character* target, Skill* skill) {
 
 void Combat::processTurn() {
 
-    // TODO - reset or decrement status effect for player party
     for(size_t i = 0; i < playerParty.getPartySize(); i++) {
         if(playerParty[i]->getDef() > playerParty[i]->getMaxDef()) {
             playerParty[i]->setDefense(playerParty[i]->getMaxDef());
         }
+
+        if(playerParty[i]->getAtk() > playerParty[i]->getMaxAtk()) {
+            playerParty[i]->setAttack(playerParty[i]->getMaxAtk());
+        }
+
+        if(playerParty[i]->getMagic() > playerParty[i]->getMaxMagic()) {
+            playerParty[i]->setMagic(playerParty[i]->getMaxMagic());
+        }
+
+        if(playerParty[i]->getResistance() > playerParty[i]->getMaxResistance()) {
+            playerParty[i]->setResistance(playerParty[i]->getMaxResistance());
+        }
+
+        // resource regen
+        playerParty[i]->setResource(playerParty[i]->getResource() + (0.5 * playerParty[i]->getMaxResource()));
     }
     
     // perform actions
@@ -127,6 +141,20 @@ void Combat::processTurn() {
         if(enemyParty[i]->getDef() > enemyParty[i]->getMaxDef()) {
             enemyParty[i]->setDefense(enemyParty[i]->getMaxDef());
         }
+
+        if(enemyParty[i]->getAtk() > enemyParty[i]->getMaxAtk()) {
+            enemyParty[i]->setAttack(enemyParty[i]->getMaxAtk());
+        }
+
+        if(enemyParty[i]->getMagic() > enemyParty[i]->getMaxMagic()) {
+            enemyParty[i]->setMagic(enemyParty[i]->getMaxMagic());
+        }
+
+        if(enemyParty[i]->getResistance() > enemyParty[i]->getMaxResistance()) {
+            enemyParty[i]->setResistance(enemyParty[i]->getMaxResistance());
+        }
+
+        enemyParty[i]->setResource(enemyParty[i]->getResource() + (0.5 * enemyParty[i]->getMaxResource()));
     }
 
     // get choice from each player party member

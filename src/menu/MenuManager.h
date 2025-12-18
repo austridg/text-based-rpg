@@ -33,4 +33,6 @@ public:
     void run();
 
     void printTopStack() const;
+
+    void clearConsole() const;
 };

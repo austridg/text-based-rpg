@@ -219,3 +219,7 @@ void MenuManager::run() {
 void MenuManager::printTopStack() const {
     std::cout << menuStack.top().menuMessage << endl;
 }
+
+void MenuManager::clearConsole() const {
+    cout << "\033[2J";
+}
