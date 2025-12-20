@@ -3,5 +3,5 @@
 #include "DamageHp.h"
 #include "BuffDef.h"
 
-DamageHp BasicAttack("Attack",false, 10, 0, TargetType::ONE_ENEMY);
-BuffDef  BasicDefend("Defend",false, 5, 0, TargetType::SELF);
+DamageHp BasicAttack("Attack", false, true, 10, 0, TargetType::ONE_ENEMY);
+BuffDef  BasicDefend("Defend", false, false, 5, 0, TargetType::SELF);

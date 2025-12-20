@@ -7,7 +7,7 @@ class Character;
 
 class BuffDef : public Skill {
 public:
-    BuffDef(std::string n, bool magic, float p, float c, TargetType tt);
+    BuffDef(std::string n, bool magic, bool dmg, float p, float c, TargetType tt);
 
     void useSkill(Character* source, Character* target) override;
 };

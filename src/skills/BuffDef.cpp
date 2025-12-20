@@ -1,8 +1,8 @@
 #include "BuffDef.h"
 #include "../character/Character.h"
 
-BuffDef::BuffDef(std::string n, bool magic, float p, float c, TargetType tt)
-    : Skill(n,magic,p,c,tt) {}
+BuffDef::BuffDef(std::string n, bool magic, bool dmg, float p, float c, TargetType tt)
+    : Skill(n,magic,dmg,p,c,tt) {}
 
 void BuffDef::useSkill(Character* source, Character* target) {
     float statPoints;

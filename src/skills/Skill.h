@@ -2,6 +2,7 @@
 #define SKILL_H
 
 #include <string>
+#include "../Terminal.h"
 
 enum class TargetType {
     SELF,
@@ -17,12 +18,13 @@ class Skill {
 protected:
     std::string name;
     bool isMagic;
+    bool isDmg;
     float points;
     float cost;
     TargetType targetType;
 public:
     // constructor / destructor
-    Skill(std::string n, bool magic, float p, float c, TargetType tt);
+    Skill(std::string n, bool magic, bool dmg, float p, float c, TargetType tt);
     virtual ~Skill();
 
     // getters
@@ -31,6 +33,7 @@ public:
     float getPoints() const;
     float getCost() const;
     TargetType getTargetType() const;
+    terminal::Color getSkillColor() const;
 
     bool canUse(Character* source);
 

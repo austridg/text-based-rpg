@@ -47,7 +47,7 @@ void MenuManager::createSelectSkillMenu() {
     for(size_t i = 0; i < gameData->playerParty[gameData->partyIndex]->getSkillListSize(); i++) {
 
         skillMenuOptions.emplace_back(Command{
-            gameData->playerParty[gameData->partyIndex]->getSkills()[i]->getName(),
+            terminal::foreground(gameData->playerParty[gameData->partyIndex]->getSkills()[i]->getSkillColor()) + gameData->playerParty[gameData->partyIndex]->getSkills()[i]->getName() + terminal::foreground(terminal::white),
             [this,i]() { 
                 auto pickedSkill = gameData->playerParty[gameData->partyIndex]->getSkills()[i];
                 if(pickedSkill != nullptr) { gameData->currentBattle.skill = pickedSkill; }

@@ -1,8 +1,8 @@
 #include "DamageHp.h"
 #include "../character/Character.h"
 
-DamageHp::DamageHp(std::string n, bool magic,float p, float c, TargetType tt)
-    : Skill(n,magic,p,c,tt) {}
+DamageHp::DamageHp(std::string n, bool magic, bool dmg, float p, float c, TargetType tt)
+    : Skill(n,magic,dmg,p,c,tt) {}
 
 void DamageHp::useSkill(Character* source, Character* target) {
     float dmgStat = (isMagic) ? source->getMagic() : source->getAtk();
