@@ -127,7 +127,7 @@ void MenuManager::createSelectTargetMenu() {
                         menuStack.pop();
                         menuStack.pop();
                         menuStack.pop();
-                        terminal::clearConsole();
+                        // terminal::clearConsole();
                         return;
                     }
                     

@@ -5,6 +5,7 @@
 #include <stack>
 #include <algorithm>
 #include <utility>
+#include "../Terminal.h"
 
 
 // constructor
@@ -20,13 +21,12 @@ void Combat::printTurn() const {
 }
 
 void Combat::endInfo(Party *winners) const {
-    // std::cout << losers->getName() << " HAS FALLEN!" << std::endl;
-    std::cout << "====================================" << std::endl;
+    std::cout << ((playerParty.getIsAlive()) ? terminal::foreground(terminal::brightGreen) : terminal::foreground(terminal::brightRed)) << "====================================" << std::endl;
     std::cout << "BATTLE HAS ENDED!" << std::endl;
     std::cout << "WINNERS: ";
     for (size_t i = 0; i < winners->getPartySize(); i++) { std::cout << (*winners)[i]->getName() << " | "; } 
     std::cout << std::endl;
-    std::cout << "====================================" << std::endl << std::endl;
+    std::cout << "====================================" << std::endl << std::endl << terminal::reset;
 
     // TODO - Print XP, LVL, etc. 
 
@@ -196,6 +196,7 @@ bool Combat::endBattle() {
             (*winner)[i]->canLevel(expDropped);
         }
 
+        terminal::foreground(terminal::brightGreen);
         endInfo(winner);
         return false;
     }

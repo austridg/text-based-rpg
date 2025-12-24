@@ -1,5 +1,6 @@
 #include "DamageHp.h"
 #include "../character/Character.h"
+#include "../Terminal.h"
 
 DamageHp::DamageHp(std::string n, bool magic, bool dmg, float p, float c, TargetType tt)
     : Skill(n,magic,dmg,p,c,tt) {}
@@ -12,5 +13,5 @@ void DamageHp::useSkill(Character* source, Character* target) {
 
     target->setHp(target->getHp() - dmgPoints);
     if (target->getHp() < 0) { target->setHp(0); }
-    std::cout << target->getName() << " lost " << dmgPoints << " HP!\n";
+    std::cout << terminal::foreground(target->getHealthColor()) << target->getName() << terminal::reset << " lost " << terminal::foreground(terminal::brightRed) << dmgPoints << terminal::reset << " HP!\n";
 }
