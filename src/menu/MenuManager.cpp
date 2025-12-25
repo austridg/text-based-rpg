@@ -130,6 +130,7 @@ void MenuManager::createSelectTargetMenu() {
                     // if battle is over then end battle
                     if(!(gameData->currentBattle.playerParty.getIsAlive()) || !(gameData->currentBattle.enemyParty.getIsAlive())) {
                         gameData->endGame = gameData->currentBattle.endBattle();
+                        gameData->playerParty.healParty();
                         gameData->partyIndex = getFirstPartyIndex();
                         gameData->arenaIndex++;
                         menuStack.pop();
@@ -198,32 +199,26 @@ size_t MenuManager::getLastPartyIndex() {
 }
 
 bool MenuManager::nextPartyMember() {
-    bool validPartyIndex{};
 
-    for(size_t currentPartyIndex = gameData->partyIndex; !validPartyIndex; currentPartyIndex++) {
-        if(gameData->playerParty.getPartySize() == currentPartyIndex + 1) { break; }
-        if(!gameData->playerParty[currentPartyIndex + 1]->getIsAlive()) { continue; }
-
-        gameData->partyIndex++;
-        validPartyIndex = true;
+    for(size_t i = gameData->partyIndex + 1; i < gameData->playerParty.getPartySize(); ++i) {
+        if(gameData->playerParty[i]->getIsAlive()) { gameData->partyIndex = i; return true; }
     }
 
-    return validPartyIndex;
+    return false;
 
 }
 
 bool MenuManager::prevPartyMember() {
-    bool validPartyIndex{};
 
-    for(size_t currentPartyIndex = gameData->partyIndex; !validPartyIndex; currentPartyIndex++) {
-        if(gameData->playerParty.getPartySize() == currentPartyIndex - 1) { break; }
-        if(!gameData->playerParty[currentPartyIndex - 1]->getIsAlive()) { continue; }
-
-        gameData->partyIndex--;
-        validPartyIndex = true;
+    if(gameData->partyIndex == 0) { return false; }
+    
+    for(size_t i = gameData->partyIndex; i > 0; --i) {
+        size_t prev = i - 1;
+        if(gameData->playerParty[prev]->getIsAlive()) { gameData->partyIndex = prev; return true; }
     }
 
-    return validPartyIndex;
+    return false;
+
 }
 
 // ------------------------------------->
