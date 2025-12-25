@@ -77,20 +77,11 @@ void Character::fullHeal() {
     stats.hp = stats.maxHp;
 }
 
-// defend (just switches isDefending bool for combat system)
-void Character::defend() {
-    isDefending = true;
-
-    std::cout << name << " is now defending!\n";
-}
-
-// reset
-void Character::resetIsDefending() {
-    if (isDefending) { isDefending = false; }
-}
-
 void Character::levelUp() {
     stats.level = stats.level + 1;
+
+    checkNewSkill();
+
     this->setHpStat();
     this->setResourceStat();
     this->setAtkStat();
@@ -130,5 +121,11 @@ void Character::printInfo() const {
 void Character::printSkills() const {
     for (size_t i = 0; i < skills.size(); i++) {
         std::cout << i + 1 << ") " << skills[i]->getName() << std::endl;
+    }
+}
+
+void Character::checkNewSkill() {
+    if(unlockableSkills[stats.level]) {
+        skills.emplace_back(unlockableSkills[stats.level]);
     }
 }

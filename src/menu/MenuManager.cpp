@@ -54,14 +54,14 @@ void MenuManager::createSelectSkillMenu() {
                 if (!gameData->playerParty[gameData->partyIndex]->getSkills()[i]->canUse(gameData->playerParty[gameData->partyIndex])) {
                     terminal::clearConsole();
                     std::cout << terminal::foreground(terminal::red) << "Not enough " << ((gameData->playerParty[gameData->partyIndex]->getIsMagic()) ? "mana.\n" : "stamina.\n") << terminal::reset;
-                    createSelectSkillMenu();
-                };
-
-                auto pickedSkill = gameData->playerParty[gameData->partyIndex]->getSkills()[i];
-                if(pickedSkill != nullptr) { gameData->currentBattle.skill = pickedSkill; }
-                gameData->currentBattle.source = gameData->playerParty[gameData->partyIndex];
-                terminal::clearConsole();
-                createSelectTargetMenu();
+                }
+                else {
+                    auto pickedSkill = gameData->playerParty[gameData->partyIndex]->getSkills()[i];
+                    if(pickedSkill != nullptr) { gameData->currentBattle.skill = pickedSkill; }
+                    gameData->currentBattle.source = gameData->playerParty[gameData->partyIndex];
+                    terminal::clearConsole();
+                    createSelectTargetMenu();
+                }
             }
         });
     }
@@ -73,7 +73,6 @@ void MenuManager::createSelectSkillMenu() {
             [this]() {
                 prevPartyMember();
                 terminal::clearConsole();
-                menuStack.pop();
                 createSelectSkillMenu();
                 gameData->currentBattle.actionDeque.pop_back();
             }
