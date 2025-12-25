@@ -18,7 +18,8 @@ Archer::Archer(const std::string& n,int level)
         stats.maxResistance = archerResistance(level);
 
         unlockableSkills = {
-            {2,&ArrowShot}
+            {2,&ArrowShot},
+            {3,&Volley}
         };
 
         isMagic = false;

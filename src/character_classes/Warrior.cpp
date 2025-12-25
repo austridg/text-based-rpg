@@ -1,4 +1,8 @@
 #include "Warrior.h"
+#include "../skills/SkillList.h"
+#include "../skills/DamageHp.h"
+#include "../skills/BuffAtk.h"
+#include "../skills/BuffDef.h"
 
 Warrior::Warrior(const std::string& n,int level)
     : Character(n, level) {
@@ -15,7 +19,10 @@ Warrior::Warrior(const std::string& n,int level)
         stats.resistance = warriorResistance(level);
         stats.maxResistance = warriorResistance(level);
 
-        isMagic = false;
+        unlockableSkills = {
+            {2,&StrongAttack},
+            {3,&Warcry}
+        };
 
         isMagic = false;
 
