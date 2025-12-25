@@ -15,6 +15,8 @@ Enemy::Enemy(const std::string& n,int level)
         stats.resistance = enemyResistance(level);
         stats.maxResistance = enemyResistance(level);
 
+        isMagic = false;
+
         characterClass = ClassType::Enemy;
     };
 

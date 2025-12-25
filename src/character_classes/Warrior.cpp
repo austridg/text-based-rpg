@@ -17,6 +17,8 @@ Warrior::Warrior(const std::string& n,int level)
 
         isMagic = false;
 
+        isMagic = false;
+
         characterClass = ClassType::Warrior;
     };
 

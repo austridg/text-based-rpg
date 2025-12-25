@@ -92,8 +92,11 @@ void Character::resetIsDefending() {
 void Character::levelUp() {
     stats.level = stats.level + 1;
     this->setHpStat();
+    this->setResourceStat();
     this->setAtkStat();
     this->setDefStat();
+    this->setMagicStat();
+    this->setResistanceStat();
 }
 
 void Character::canLevel(float xp) {
@@ -115,6 +118,7 @@ void Character::printInfo() const {
     std::cout << " ) =====\n" << terminal::reset;
     std::cout << "LEVEL: " << stats.level << " (" << exp << "exp / " << nextLevel << "exp)" << " | ";
     std::cout << "HP: " << stats.hp << " / " << stats.maxHp << " | ";
+    std::cout << ((this->getIsMagic()) ? "Mana: " : "Stamina: ") << stats.resource << " / " << stats.maxResource << " | ";
     std::cout << "ATK: " << stats.attack << " | ";
     std::cout << "DEF: " << stats.defense << " | ";
     std::cout << "MAG: " << stats.magic << " | ";

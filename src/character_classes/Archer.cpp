@@ -15,6 +15,8 @@ Archer::Archer(const std::string& n,int level)
         stats.resistance = archerResistance(level);
         stats.maxResistance = archerResistance(level);
 
+        isMagic = false;
+
         characterClass = ClassType::Archer;
     };
 

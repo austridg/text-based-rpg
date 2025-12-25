@@ -15,6 +15,8 @@ Healer::Healer(const std::string& n,int level)
         stats.resistance = healerResistance(level);
         stats.maxResistance = healerResistance(level);
 
+        isMagic = true;
+
         characterClass = ClassType::Healer;
     };
 

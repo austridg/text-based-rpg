@@ -17,7 +17,7 @@ Combat::Combat(Party player, Party enemy)
 
 // print info
 void Combat::printTurn() const {
-    std::cout << "===== Turn: " << turnCount << " =====\n";
+    std::cout << terminal::foreground(terminal::brightBlue) << "===== Turn: " << turnCount << " =====\n" << terminal::reset;
 }
 
 void Combat::endInfo(Party *winners) const {
@@ -124,7 +124,7 @@ void Combat::processTurn() {
         }
 
         // resource regen
-        playerParty[i]->setResource(playerParty[i]->getResource() + (0.5 * playerParty[i]->getMaxResource()));
+        // playerParty[i]->setResource(playerParty[i]->getResource() + (0.5 * playerParty[i]->getMaxResource()));
     }
     
     // perform actions
@@ -154,7 +154,7 @@ void Combat::processTurn() {
             enemyParty[i]->setResistance(enemyParty[i]->getMaxResistance());
         }
 
-        enemyParty[i]->setResource(enemyParty[i]->getResource() + (0.5 * enemyParty[i]->getMaxResource()));
+        // enemyParty[i]->setResource(enemyParty[i]->getResource() + (0.5 * enemyParty[i]->getMaxResource()));
     }
 
     // get choice from each player party member

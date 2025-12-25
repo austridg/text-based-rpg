@@ -15,6 +15,8 @@ Boss::Boss(const std::string& n,int level)
         stats.resistance = bossResistance(level);
         stats.maxResistance = bossResistance(level);
 
+        isMagic = false;
+
         characterClass = ClassType::Boss;
     };
 
