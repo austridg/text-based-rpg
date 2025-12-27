@@ -49,11 +49,19 @@ void MenuManager::createSelectSkillMenu() {
         skillMenuOptions.emplace_back(Command{
             terminal::foreground(gameData->playerParty[gameData->partyIndex]->getSkills()[i]->getSkillColor()) + gameData->playerParty[gameData->partyIndex]->getSkills()[i]->getName() + terminal::foreground(terminal::white),
             [this,i]() { 
-                auto pickedSkill = gameData->playerParty[gameData->partyIndex]->getSkills()[i];
-                if(pickedSkill != nullptr) { gameData->currentBattle.skill = pickedSkill; }
-                gameData->currentBattle.source = gameData->playerParty[gameData->partyIndex];
-                terminal::clearConsole();
-                createSelectTargetMenu();
+        
+                // check if character can use skill
+                if (!gameData->playerParty[gameData->partyIndex]->getSkills()[i]->canUse(gameData->playerParty[gameData->partyIndex])) {
+                    terminal::clearConsole();
+                    std::cout << terminal::foreground(terminal::red) << "Not enough " << ((gameData->playerParty[gameData->partyIndex]->getIsMagic()) ? "mana.\n" : "stamina.\n") << terminal::reset;
+                }
+                else {
+                    auto pickedSkill = gameData->playerParty[gameData->partyIndex]->getSkills()[i];
+                    if(pickedSkill != nullptr) { gameData->currentBattle.skill = pickedSkill; }
+                    gameData->currentBattle.source = gameData->playerParty[gameData->partyIndex];
+                    terminal::clearConsole();
+                    createSelectTargetMenu();
+                }
             }
         });
     }
@@ -122,12 +130,12 @@ void MenuManager::createSelectTargetMenu() {
                     // if battle is over then end battle
                     if(!(gameData->currentBattle.playerParty.getIsAlive()) || !(gameData->currentBattle.enemyParty.getIsAlive())) {
                         gameData->endGame = gameData->currentBattle.endBattle();
+                        gameData->playerParty.healParty();
                         gameData->partyIndex = getFirstPartyIndex();
                         gameData->arenaIndex++;
                         menuStack.pop();
                         menuStack.pop();
                         menuStack.pop();
-                        // terminal::clearConsole();
                         return;
                     }
                     
@@ -191,32 +199,26 @@ size_t MenuManager::getLastPartyIndex() {
 }
 
 bool MenuManager::nextPartyMember() {
-    bool validPartyIndex{};
 
-    for(size_t currentPartyIndex = gameData->partyIndex; !validPartyIndex; currentPartyIndex++) {
-        if(gameData->playerParty.getPartySize() == currentPartyIndex + 1) { break; }
-        if(!gameData->playerParty[currentPartyIndex + 1]->getIsAlive()) { continue; }
-
-        gameData->partyIndex++;
-        validPartyIndex = true;
+    for(size_t i = gameData->partyIndex + 1; i < gameData->playerParty.getPartySize(); ++i) {
+        if(gameData->playerParty[i]->getIsAlive()) { gameData->partyIndex = i; return true; }
     }
 
-    return validPartyIndex;
+    return false;
 
 }
 
 bool MenuManager::prevPartyMember() {
-    bool validPartyIndex{};
 
-    for(size_t currentPartyIndex = gameData->partyIndex; !validPartyIndex; currentPartyIndex++) {
-        if(gameData->playerParty.getPartySize() == currentPartyIndex - 1) { break; }
-        if(!gameData->playerParty[currentPartyIndex - 1]->getIsAlive()) { continue; }
-
-        gameData->partyIndex--;
-        validPartyIndex = true;
+    if(gameData->partyIndex == 0) { return false; }
+    
+    for(size_t i = gameData->partyIndex; i > 0; --i) {
+        size_t prev = i - 1;
+        if(gameData->playerParty[prev]->getIsAlive()) { gameData->partyIndex = prev; return true; }
     }
 
-    return validPartyIndex;
+    return false;
+
 }
 
 // ------------------------------------->

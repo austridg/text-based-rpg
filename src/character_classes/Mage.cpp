@@ -15,6 +15,8 @@ Mage::Mage(const std::string& n,int level)
         stats.resistance = mageResistance(level);
         stats.maxResistance = mageResistance(level);
 
+        isMagic = true;
+
         characterClass = ClassType::Mage;
     };
 

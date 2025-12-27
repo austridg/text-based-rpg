@@ -1,4 +1,6 @@
 #include "Archer.h"
+#include "../skills/SkillList.h"
+#include "../skills/DamageHp.h"
 
 Archer::Archer(const std::string& n,int level)
     : Character(n, level) {
@@ -14,6 +16,13 @@ Archer::Archer(const std::string& n,int level)
         stats.maxMagic = archerMagic(level);
         stats.resistance = archerResistance(level);
         stats.maxResistance = archerResistance(level);
+
+        unlockableSkills = {
+            {2,&ArrowShot},
+            {3,&Volley}
+        };
+
+        isMagic = false;
 
         characterClass = ClassType::Archer;
     };

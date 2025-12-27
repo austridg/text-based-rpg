@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <iostream>
 #include "../Formulas.hpp"
 #include "../skills/Skill.h"
@@ -30,6 +31,7 @@ protected:
     bool isDefending;
     bool isMagic;
     std::vector<Skill*> skills;
+    std::unordered_map<int,Skill*> unlockableSkills;
     ClassType characterClass;
 public:
     // Constructor / Destructor
@@ -87,12 +89,6 @@ public:
     // full heal
     void fullHeal();
 
-    // defend
-    virtual void defend();
-
-    // reset
-    void resetIsDefending();
-
     void canLevel(float xp);
 
     void levelUp();
@@ -103,6 +99,8 @@ public:
     void printSkills() const;
 
     virtual void printClass() const = 0;
+
+    void checkNewSkill();
 };
 
 #endif

@@ -28,6 +28,7 @@ void Party::removeMember(int index) {
 void Party::healParty() {
     for(size_t i = 0; i < party.size(); i++) {
         party[i]->fullHeal();
+        party[i]->setIsAlive(true);
     }
 }
 
