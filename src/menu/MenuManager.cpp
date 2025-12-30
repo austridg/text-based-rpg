@@ -102,6 +102,8 @@ void MenuManager::createSelectTargetMenu() {
     // target menu options (temporary var)
     std::vector<Command> targetMenuOptions;
 
+    bool allTargets{};
+
     // get valid targets for current party member
     gameData->currentBattle.getValidTargets(
         gameData->currentBattle.playerParty,
@@ -110,18 +112,27 @@ void MenuManager::createSelectTargetMenu() {
         gameData->currentBattle.skill
     );
 
-    // loop over valid targets and add them to targetMenuOptions
-    for(size_t i = 0; i < gameData->currentBattle.validTargets.size(); i++) {
-        targetMenuOptions.emplace_back(Command{
-        terminal::foreground(gameData->currentBattle.validTargets[i]->getHealthColor()) + gameData->currentBattle.validTargets[i]->getName() + terminal::foreground(terminal::white),
-            [this,i]() {
-                gameData->currentBattle.target = gameData->currentBattle.validTargets[i];
+    // add action to deque if target type is "ALL_ENEMIES"
+    if(gameData->currentBattle.skill->getTargetType() == TargetType::ALL_ENEMIES || gameData->currentBattle.skill->getTargetType() == TargetType::ALL_ALLIES) {
+        std::string targetMessage;
 
-                gameData->currentBattle.actionDeque.push_back(Action(
-                    gameData->currentBattle.source,
-                    gameData->currentBattle.target,
-                    gameData->currentBattle.skill
-                ));
+        for(size_t i = 0; i < gameData->currentBattle.validTargets.size(); i++) {
+            targetMessage += terminal::foreground(gameData->currentBattle.validTargets[i]->getHealthColor()) + gameData->currentBattle.validTargets[i]->getName() + terminal::foreground(terminal::white);
+            if(!((i + 1) == gameData->currentBattle.validTargets.size())) { targetMessage += ", "; }
+        }
+
+        targetMenuOptions.emplace_back(Command{
+            targetMessage,
+            [this]() {
+                for(size_t i = 0; i < gameData->currentBattle.validTargets.size(); i++) {
+                    gameData->currentBattle.target = gameData->currentBattle.validTargets[i];
+
+                    gameData->currentBattle.actionDeque.push_back(Action(
+                        gameData->currentBattle.source,
+                        gameData->currentBattle.target,
+                        gameData->currentBattle.skill
+                    ));
+                }
 
                 // if false, there's no more party members, so invoke processTurn()
                 if(!nextPartyMember()) {
@@ -138,15 +149,10 @@ void MenuManager::createSelectTargetMenu() {
                         menuStack.pop();
                         return;
                     }
-                    
+                                        
                     gameData->partyIndex = getFirstPartyIndex();
                     menuStack.pop();
                     menuStack.pop();
-                    // gameData->currentBattle.turnCount++;
-                    // std::cout << "===== Player Party =====\n";
-                    // gameData->playerParty.printPartyInfo();
-                    // std::cout << std::endl << "===== Enemy Party =====\n";
-                    // gameData->arena[gameData->arenaIndex].printPartyInfo();
                     gameData->currentBattle.printTurn();
                 }
                 else {
@@ -157,8 +163,55 @@ void MenuManager::createSelectTargetMenu() {
                 }
             }
         });
+    }
+    else {
+        // loop over valid targets and add them to targetMenuOptions
+        for(size_t i = 0; i < gameData->currentBattle.validTargets.size(); i++) {
+            targetMenuOptions.emplace_back(Command{
+            terminal::foreground(gameData->currentBattle.validTargets[i]->getHealthColor()) + gameData->currentBattle.validTargets[i]->getName() + terminal::foreground(terminal::white),
+                [this,i]() {
+                    gameData->currentBattle.target = gameData->currentBattle.validTargets[i];
+
+                    gameData->currentBattle.actionDeque.push_back(Action(
+                        gameData->currentBattle.source,
+                        gameData->currentBattle.target,
+                        gameData->currentBattle.skill
+                    ));
+
+                    // if false, there's no more party members, so invoke processTurn()
+                    if(!nextPartyMember()) {
+                        terminal::clearConsole();
+                        gameData->currentBattle.processTurn();
+                        // if battle is over then end battle
+                        if(!(gameData->currentBattle.playerParty.getIsAlive()) || !(gameData->currentBattle.enemyParty.getIsAlive())) {
+                            gameData->endGame = gameData->currentBattle.endBattle();
+                            gameData->playerParty.healParty();
+                            gameData->partyIndex = getFirstPartyIndex();
+                            gameData->arenaIndex++;
+                            menuStack.pop();
+                            menuStack.pop();
+                            menuStack.pop();
+                            return;
+                        }
+                                        
+                        gameData->partyIndex = getFirstPartyIndex();
+                        menuStack.pop();
+                        menuStack.pop();
+                        gameData->currentBattle.printTurn();
+                    }
+                    else {
+                        menuStack.pop();
+                        menuStack.pop();
+                        terminal::clearConsole();
+                        createSelectSkillMenu();
+                    }
+                }
+            });
+        }
 
     }
+
+    
 
     // back command
     targetMenuOptions.emplace_back(Command{

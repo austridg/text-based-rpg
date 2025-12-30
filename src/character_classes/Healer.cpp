@@ -16,10 +16,11 @@ Healer::Healer(const std::string& n,int level)
         stats.maxResistance = healerResistance(level);
 
         skills.emplace_back(&BasicHeal);
+        skills.emplace_back(&StrengthenDefense);
 
-        unlockableSkills = {
-            {2,&StrengthenDefense}
-        };
+        // unlockableSkills = {
+        //     {2,&StrengthenDefense}
+        // };
 
         isMagic = true;
 
