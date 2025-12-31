@@ -125,7 +125,7 @@ void Combat::processTurn() {
         }
 
         // resource regen
-        // playerParty[i]->resourceRegen();
+        playerParty[i]->resourceRegen();
     }
     
     // perform actions

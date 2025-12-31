@@ -128,6 +128,6 @@ void Character::checkNewSkill() {
 }
 
 void Character::resourceRegen() {
-    setResource(getResource() - (3.f*((stats.level*0.2f) + stats.level)));
+    setResource(getResource() + (3.f*((stats.level*0.2f) + stats.level)));
     if(getResource() > getMaxResource()) { setResource(getMaxResource()); }
 }
