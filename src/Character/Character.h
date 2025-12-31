@@ -101,6 +101,8 @@ public:
     virtual void printClass() const = 0;
 
     void checkNewSkill();
+
+    void resourceRegen();
 };
 
 #endif

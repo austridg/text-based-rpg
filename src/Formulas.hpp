@@ -52,3 +52,5 @@ inline constexpr float bossAtk(int level) { return 17 + level * 4; }
 inline constexpr float bossDef(int level) { return 7 + level * 3; }
 inline constexpr float bossMagic(int level) { return 17 + level * 4; }
 inline constexpr float bossResistance(int level) { return 7 + level * 3; }
+
+inline constexpr float resourceRegenerationStat(int level) { return (level*0.2f) + level; }

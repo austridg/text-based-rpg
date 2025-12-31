@@ -33,7 +33,7 @@ bool Character::getIsMagic() const { return isMagic; }
 const std::vector<Skill*>& Character::getSkills() { return skills; }
 size_t Character::getSkillListSize() const { return skills.size(); }
 terminal::Color Character::getClassColor() const {
-    switch(this->characterClass) {
+    switch(characterClass) {
         case ClassType::Warrior:
             return terminal::brightRed;
             break;
@@ -46,8 +46,7 @@ terminal::Color Character::getClassColor() const {
         case ClassType::Healer:
             return terminal::brightMagenta;
             break;
-        case ClassType::Enemy:
-        case ClassType::Boss:
+        default:
             return terminal::white;
             break;
     }
@@ -113,12 +112,12 @@ void Character::printInfo() const {
     std::cout << "MAG: " << stats.magic << " | ";
     std::cout << "RES: " << stats.resistance << " | ";
     std::cout << "STATUS: " << (isAlive ? "Alive" : "Dead");
-    std::cout << std::endl << std::endl;
+    std::cout << "\n\n";
 }
 
 void Character::printSkills() const {
     for (size_t i = 0; i < skills.size(); i++) {
-        std::cout << i + 1 << ") " << skills[i]->getName() << std::endl;
+        std::cout << i + 1 << ") " << skills[i]->getName() << "\n";
     }
 }
 
@@ -126,4 +125,9 @@ void Character::checkNewSkill() {
     if(unlockableSkills[stats.level]) {
         skills.emplace_back(unlockableSkills[stats.level]);
     }
+}
+
+void Character::resourceRegen() {
+    setResource(getResource() + (3.f*((stats.level*0.2f) + stats.level)));
+    if(getResource() > getMaxResource()) { setResource(getMaxResource()); }
 }

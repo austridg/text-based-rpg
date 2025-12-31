@@ -17,11 +17,11 @@ void Menu::runMenu() {
     bool validOption{};
     while(!validOption) {
 
-        std::cout << menuMessage << std::endl;
+        std::cout << menuMessage << "\n";
 
         // print options
         for (size_t i=0;i < options.size(); i++) {
-            std::cout << i + 1 << ") " << options[i].name << std::endl;
+            std::cout << i + 1 << ") " << options[i].name << "\n";
         }
 
         std::cout << ">";
