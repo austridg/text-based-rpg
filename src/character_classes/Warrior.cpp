@@ -16,13 +16,10 @@ Warrior::Warrior(const std::string& n,int level)
         stats.resistance = warriorResistance(level);
         stats.maxResistance = warriorResistance(level);
 
-        skills.emplace_back(&StrongAttack);
-        skills.emplace_back(&Warcry);
-
-        // unlockableSkills = {
-        //     {2,&StrongAttack},
-        //     {3,&Warcry}
-        // };
+        unlockableSkills = {
+            {2,&StrongAttack},
+            {3,&Warcry}
+        };
 
         isMagic = false;
 

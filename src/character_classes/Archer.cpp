@@ -14,14 +14,11 @@ Archer::Archer(const std::string& n,int level)
         stats.maxMagic = archerMagic(level);
         stats.resistance = archerResistance(level);
         stats.maxResistance = archerResistance(level);
-
-        skills.emplace_back(&ArrowShot);
-        skills.emplace_back(&Volley);
-
-        // unlockableSkills = {
-        //     {2,&ArrowShot},
-        //     {3,&Volley}
-        // };
+        
+        unlockableSkills = {
+            {2,&ArrowShot},
+            {3,&Volley}
+        };
 
         isMagic = false;
 

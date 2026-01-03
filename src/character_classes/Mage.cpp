@@ -16,11 +16,10 @@ Mage::Mage(const std::string& n,int level)
         stats.maxResistance = mageResistance(level);
 
         skills.emplace_back(&Fireball);
-        skills.emplace_back(&WeakenResistance);
 
-        // unlockableSkills = {
-        //     {2,&WeakenResistance}
-        // };
+        unlockableSkills = {
+            {2,&WeakenResistance}
+        };
 
         isMagic = true;
 

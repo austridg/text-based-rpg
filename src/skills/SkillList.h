@@ -21,4 +21,4 @@ extern DebuffRes WeakenResistance;
 extern HealHp BasicHeal;
 extern BuffDef StrengthenDefense;
 
-// TODO - Add Access Functions and Fill-in Functions for Skill Vector
+extern DamageHp Hellfire;

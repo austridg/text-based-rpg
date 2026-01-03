@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <stack>
+#include <array>
+#include <random>
 #include "../character/Character.h"
 #include "../character_classes/Warrior.h"
 #include "../character_classes/Mage.h"
@@ -16,11 +18,35 @@
 #include "../menu/MenuManager.h"
 #include "GameData.h"
 #include "../Terminal.h"
+#include "../Random.cpp"
 
 class Game {
 private:
     GameData gameData;
     MenuManager manager;
+    std::array<std::string,20> possibleNames{
+        "Alex",
+        "Ryan",
+        "Austin",
+        "Erik",
+        "Plankton",
+        "Nightowl",
+        "Sean",
+        "Lyra",
+        "Morgan",
+        "Harry",
+        "Apple",
+        "Jerry",
+        "Julia",
+        "William",
+        "Sarah",
+        "Ava",
+        "Kevin",
+        "Mark",
+        "Olivia",
+        "Bob"
+    };
+
 public:
     Game();
     ~Game();
@@ -31,7 +57,7 @@ public:
 
     void gameLoop();
 
-    bool combatLoop();
+    const std::string& generateName();
 
     void clearConsole() const;
 };
