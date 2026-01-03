@@ -20,3 +20,6 @@ DebuffRes WeakenResistance("Weaken Resistance", true, true, 15.f, 20.f, TargetTy
 // Healer Skills
 HealHp BasicHeal("Heal", true, false, 10.f, 5.f, TargetType::ONE_ALLY);
 BuffDef StrengthenDefense("Strengthen Defense", true, false, 20.f, 15.f, TargetType::ONE_ALLY);
+
+// Boss Skills
+DamageHp Hellfire("Hellfire",true,true,35.f, 20.f,TargetType::ALL_ENEMIES);

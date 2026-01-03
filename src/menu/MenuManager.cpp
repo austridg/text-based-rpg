@@ -33,7 +33,7 @@ void MenuManager::createFightMenu() {
             terminal::clearConsole();
             std::cout << "===== Player Party =====\n";
             gameData->playerParty.printPartyInfo();
-            std::cout << std::endl << "===== Enemy Party =====\n";
+            std::cout << "\n" << "===== Enemy Party =====\n";
             gameData->arena[gameData->arenaIndex].printPartyInfo();
         }}
     });
@@ -101,9 +101,7 @@ void MenuManager::createSelectSkillMenu() {
 void MenuManager::createSelectTargetMenu() {
     // target menu options (temporary var)
     std::vector<Command> targetMenuOptions;
-
-    bool allTargets{};
-
+    
     // get valid targets for current party member
     gameData->currentBattle.getValidTargets(
         gameData->currentBattle.playerParty,
@@ -286,5 +284,5 @@ void MenuManager::run() {
 // -----------------  DEBUG FUNCS  -------------------->
 
 void MenuManager::printTopStack() const {
-    std::cout << menuStack.top().menuMessage << std::endl;
+    std::cout << menuStack.top().menuMessage << "\n";
 }

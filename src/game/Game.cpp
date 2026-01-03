@@ -8,9 +8,8 @@ Game::Game()
     gameData.arena.emplace_back(createEnemyParty(3));
 
     gameData.arena.emplace_back(Party(std::vector<Character*>{
-        new Boss("Boss Man",4)
+        new Boss("Maldor",5)
     }));
-
 }
 
 Game::~Game() {
@@ -34,10 +33,26 @@ std::vector<Character*> Game::createEnemyParty(int level) {
 
     std::vector<Character*> party;
 
-    party.emplace_back(new Enemy("Enemy 1",level));
-    party.emplace_back(new Enemy("Enemy 2",level));
-    party.emplace_back(new Enemy("Enemy 3",level));
-    party.emplace_back(new Enemy("Enemy 4",level));
+    for(size_t i = 0; i < 4; i++) {
+
+        std::string name = possibleNames[randNumber(0,19)];
+
+        switch(randNumber(0,3)) {
+            case 0:
+                party.emplace_back(new Warrior(name,level));
+                break;
+            case 1:
+                party.emplace_back(new Mage(name,level));
+                break;
+            case 2:
+                party.emplace_back(new Archer(name,level));
+                break;
+            case 3:
+                party.emplace_back(new Healer(name,level));
+                break;
+        }
+
+    }
 
     return party;
 }
@@ -50,7 +65,7 @@ void Game::createPlayerParty() {
 
         // prompt for member name
         std::string name;
-        std::cout << "Party Member " << i + 1 << ": " << std::endl;
+        std::cout << "Party Member " << i + 1 << ": " << "\n";
         std::cout << "Name: ";
         std::cin >> name;
         clearConsole();
@@ -58,7 +73,7 @@ void Game::createPlayerParty() {
         // prompt for member class
         bool endLoop{};
         while(!endLoop) {
-            std::cout << "Choose Class for " << name << ": " << std::endl;
+            std::cout << "Choose Class for " << name << ": " << "\n";
             std::cout << "1) " << terminal::foreground(terminal::brightRed) << "Warrior\n" << terminal::reset;
             std::cout << "2) " << terminal::foreground(terminal::brightBlue) << "Mage\n" << terminal::reset;
             std::cout << "3) " << terminal::foreground(terminal::brightGreen) << "Archer\n" << terminal::reset;
@@ -93,24 +108,8 @@ void Game::gameLoop() {
     }
 }
 
-bool Game::combatLoop() {
-    gameData.currentBattle.battleStart();
-
-    std::cout << "==== Player Party =====\n";
-    gameData.playerParty.printPartyInfo();
-    std::cout << std::endl << "==== Enemy Party =====\n";
-    gameData.arena[gameData.arenaIndex].printPartyInfo();
-    std::cout << std::endl;
-
-    manager.createFightMenu();
-
-    while(gameData.currentBattle.playerParty.getIsAlive() && gameData.currentBattle.enemyParty.getIsAlive()) {
-        gameData.currentBattle.printTurn();
-
-        manager.run();
-
-        gameData.currentBattle.turnCount++;
-    }
+const std::string& Game::generateName() {
+    return possibleNames[(rand() % 19)];
 }
 
 void Game::clearConsole() const {

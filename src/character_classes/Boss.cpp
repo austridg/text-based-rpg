@@ -15,6 +15,12 @@ Boss::Boss(const std::string& n,int level)
         stats.resistance = bossResistance(level);
         stats.maxResistance = bossResistance(level);
 
+        skills.emplace_back(&Fireball);
+        skills.emplace_back(&BasicHeal);
+        skills.emplace_back(&WeakenResistance);
+        skills.emplace_back(&StrengthenDefense);
+        skills.emplace_back(&Hellfire);
+
         isMagic = false;
 
         characterClass = ClassType::Boss;
