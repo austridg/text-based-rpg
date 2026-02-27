@@ -1,33 +1,33 @@
 #pragma once
 
-#include <stack>
-#include "Menu.h"
 #include "../game/GameData.h"
+#include "Menu.h"
+#include <stack>
 
 class MenuManager {
-private:
-    std::stack<Menu> menuStack;
-    GameData *gameData;
-public:
-    MenuManager(GameData *gm);
+  private:
+	std::stack<Menu> menuStack;
+	GameData* gameData;
 
-    void nextMenu(const Menu &menu);
-    void prevMenu();
+  public:
+	MenuManager(GameData* gm);
 
-    bool nextPartyMember();
-    bool prevPartyMember();
+	void nextMenu(const Menu& menu);
+	void prevMenu();
 
-    size_t getFirstPartyIndex();
-    size_t getLastPartyIndex();
+	bool nextPartyMember();
+	bool prevPartyMember();
 
-    void createMainMenu();
+	size_t getFirstPartyIndex();
+	size_t getLastPartyIndex();
 
-    void createFightMenu();
-    void createSelectSkillMenu();
-    void createSelectTargetMenu();
+	void createMainMenu();
 
-    void run();
+	void createFightMenu();
+	void createSelectSkillMenu();
+	void createSelectTargetMenu();
 
-    void printTopStack() const;
+	void run();
 
+	void printTopStack() const;
 };

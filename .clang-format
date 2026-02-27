@@ -1,0 +1,22 @@
+BasedOnStyle: LLVM
+
+BreakBeforeBraces: Attach
+SpaceBeforeParens: ControlStatements
+
+BraceWrapping:
+  AfterControlStatement: false
+  AfterFunction: false
+  AfterStruct: false
+  AfterEnum: false
+  AfterUnion: false
+  BeforeElse: false
+  BeforeWhile: false
+PointerAlignment: Left
+DerivePointerAlignment: false
+
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+
+IndentCaseLabels: true
+ContinuationIndentWidth: 4

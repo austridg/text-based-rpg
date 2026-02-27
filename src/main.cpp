@@ -1,16 +1,16 @@
 #include "../src/game/Game.h"
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 int main() {
-    srand(time(0));
+	srand(time(0));
 
-    terminal::setup();
+	terminal::setup();
 
-    Game game;
-    
-    game.gameLoop();
+	Game game;
 
-    return 0;
+	game.gameLoop();
+
+	return 0;
 }

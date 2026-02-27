@@ -5,28 +5,29 @@
 #include <iostream>
 
 class Party {
-private:
-    std::vector<Character*> party;
-public:
-    Party() = default;
+  private:
+	std::vector<Character*> party;
 
-    Party(std::vector<Character*> members);
+  public:
+	Party() = default;
 
-    std::vector<Character*> getParty() const;
-    
-    Character* operator[](int index) const;
+	Party(std::vector<Character*> members);
 
-    size_t getPartySize() const;
+	std::vector<Character*> getParty() const;
 
-    void printPartyInfo() const;
+	Character* operator[](int index) const;
 
-    void insertMember(Character* member);
+	size_t getPartySize() const;
 
-    void removeMember(int index);
+	void printPartyInfo() const;
 
-    void healParty();
+	void insertMember(Character* member);
 
-    bool getIsAlive() const;
+	void removeMember(int index);
+
+	void healParty();
+
+	bool getIsAlive() const;
 };
 
 #endif

@@ -7,10 +7,10 @@ class DebuffRes;
 class HealHp;
 
 extern DamageHp BasicAttack;
-extern BuffDef  BasicDefend;
+extern BuffDef BasicDefend;
 
 extern DamageHp StrongAttack;
-extern BuffAtk  Warcry;
+extern BuffAtk Warcry;
 
 extern DamageHp ArrowShot;
 extern DamageHp Volley;

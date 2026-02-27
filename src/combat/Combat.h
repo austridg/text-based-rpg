@@ -4,38 +4,39 @@
 #include "../character/Character.h"
 #include "../party/Party.h"
 #include "Action.h"
-#include <iostream>
 #include <deque>
+#include <iostream>
 
 struct Combat {
-    Party playerParty;
-    Party enemyParty;
-    std::vector<Character*> validTargets;
-    int turnCount{1};
-    std::deque<Action> actionDeque;
-    Character* source{};
-    Character* target{};
-    Skill* skill{};
-    Party* winner{};
-    Party* loser{};
+	Party playerParty;
+	Party enemyParty;
+	std::vector<Character*> validTargets;
+	int turnCount{1};
+	std::deque<Action> actionDeque;
+	Character* source{};
+	Character* target{};
+	Skill* skill{};
+	Party* winner{};
+	Party* loser{};
 
-    Combat();
-    Combat(Party player, Party enemy);
+	Combat();
+	Combat(Party player, Party enemy);
 
-    void printTurn() const;
-    void endInfo(Party *winner) const;
-    void battleStart() const;
+	void printTurn() const;
+	void endInfo(Party* winner) const;
+	void battleStart() const;
 
-    void getValidTargets(const Party& sourceParty, const Party& opposingParty, Character* actingCharacter, Skill* actingSkill);
+	void getValidTargets(const Party& sourceParty, const Party& opposingParty,
+						 Character* actingCharacter, Skill* actingSkill);
 
-    Character* getEnemyTarget(Character* actingSource, Skill* actingSkill);
-    Skill* getEnemySkill(Character* source);
+	Character* getEnemyTarget(Character* actingSource, Skill* actingSkill);
+	Skill* getEnemySkill(Character* source);
 
-    void performAction(Character* source,Character* target,Skill* skill);
+	void performAction(Character* source, Character* target, Skill* skill);
 
-    void processTurn();
+	void processTurn();
 
-    bool endBattle();
+	bool endBattle();
 };
 
 #endif

@@ -1,60 +1,58 @@
 #include "Game.h"
+#include <limits>
 
-Game::Game()
-    : manager(&gameData) {
+Game::Game() : manager(&gameData) {
 
-    gameData.arena.emplace_back(createEnemyParty(1));
-    gameData.arena.emplace_back(createEnemyParty(2));
-    gameData.arena.emplace_back(createEnemyParty(3));
+	gameData.arena.emplace_back(createEnemyParty(1));
+	gameData.arena.emplace_back(createEnemyParty(2));
+	gameData.arena.emplace_back(createEnemyParty(3));
 
-    gameData.arena.emplace_back(Party(std::vector<Character*>{
-        new Boss("Maldor",5)
-    }));
+	gameData.arena.emplace_back(
+		Party(std::vector<Character*>{new Boss("Maldor", 5)}));
 }
 
 Game::~Game() {
-    // delete player party
-    for (size_t i = 0; i < gameData.playerParty.getPartySize(); i++) {
-        delete gameData.playerParty[i];
-    }
+	// delete player party
+	for (size_t i = 0; i < gameData.playerParty.getPartySize(); i++) {
+		delete gameData.playerParty[i];
+	}
 
-    // delete arena
-    for (size_t i = 0; i < gameData.arena.size(); i++) {
-        for (size_t j = 0; j < gameData.arena[i].getPartySize(); j++) {
-            delete gameData.arena[i].getParty()[j];
-        }
-    }
+	// delete arena
+	for (size_t i = 0; i < gameData.arena.size(); i++) {
+		for (size_t j = 0; j < gameData.arena[i].getPartySize(); j++) {
+			delete gameData.arena[i].getParty()[j];
+		}
+	}
 
-    //  TODO - clear vector if you want to reuse later
+	//  TODO - clear vector if you want to reuse later
 }
 
 // TODO - Make More Sophisticated
 std::vector<Character*> Game::createEnemyParty(int level) {
 
-    std::vector<Character*> party;
+	std::vector<Character*> party;
 
-    for(size_t i = 0; i < 4; i++) {
+	for (size_t i = 0; i < 4; i++) {
 
-        std::string name = possibleNames[randNumber(0,19)];
+		std::string name = possibleNames[randNumber(0, 19)];
 
-        switch(randNumber(0,3)) {
-            case 0:
-                party.emplace_back(new Warrior(name,level));
-                break;
-            case 1:
-                party.emplace_back(new Mage(name,level));
-                break;
-            case 2:
-                party.emplace_back(new Archer(name,level));
-                break;
-            case 3:
-                party.emplace_back(new Healer(name,level));
-                break;
-        }
+		switch (randNumber(0, 3)) {
+			case 0:
+				party.emplace_back(new Warrior(name, level));
+				break;
+			case 1:
+				party.emplace_back(new Mage(name, level));
+				break;
+			case 2:
+				party.emplace_back(new Archer(name, level));
+				break;
+			case 3:
+				party.emplace_back(new Healer(name, level));
+				break;
+		}
+	}
 
-    }
-
-    return party;
+	return party;
 }
 
 void Game::createPlayerParty() {
@@ -105,21 +103,16 @@ void Game::createPlayerParty() {
 }
 
 void Game::gameLoop() {
-    createPlayerParty();
-    terminal::background(terminal::white);
-    manager.createMainMenu();
+	createPlayerParty();
+	terminal::background(terminal::white);
+	manager.createMainMenu();
 
-    while (!gameData.endGame) {
+	while (!gameData.endGame) {
 
-        manager.run();
-
-    }
+		manager.run();
+	}
 }
 
-const std::string& Game::generateName() {
-    return possibleNames[(rand() % 19)];
-}
+const std::string& Game::generateName() { return possibleNames[(rand() % 19)]; }
 
-void Game::clearConsole() const {
-    std::cout << "\x1B[2J\x1B[H";
-}
+void Game::clearConsole() const { std::cout << "\x1B[2J\x1B[H"; }

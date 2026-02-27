@@ -1,210 +1,235 @@
 #include "Combat.h"
+#include "../Terminal.h"
 #include "../menu/Menu.h"
+#include <algorithm>
 #include <cstdlib>
 #include <queue>
 #include <stack>
-#include <algorithm>
 #include <utility>
-#include "../Terminal.h"
-
 
 // constructor
 Combat::Combat()
-    : turnCount(1), source(nullptr), target(nullptr), skill(nullptr), winner(nullptr), loser(nullptr) {}
+	: turnCount(1), source(nullptr), target(nullptr), skill(nullptr),
+	  winner(nullptr), loser(nullptr) {}
 
 Combat::Combat(Party player, Party enemy)
-    : playerParty(std::move(player)), enemyParty(std::move(enemy)), turnCount(1), source(nullptr), target(nullptr), skill(nullptr), winner(nullptr), loser(nullptr) {}
+	: playerParty(std::move(player)), enemyParty(std::move(enemy)),
+	  turnCount(1), source(nullptr), target(nullptr), skill(nullptr),
+	  winner(nullptr), loser(nullptr) {}
 
 // print info
 void Combat::printTurn() const {
-    std::cout << terminal::foreground(terminal::brightBlue) << "===== Turn: " << turnCount << " =====\n" << terminal::reset;
+	std::cout << terminal::foreground(terminal::brightBlue)
+			  << "===== Turn: " << turnCount << " =====\n"
+			  << terminal::reset;
 }
 
-void Combat::endInfo(Party *winners) const {
-    std::cout << ((playerParty.getIsAlive()) ? terminal::foreground(terminal::brightGreen) : terminal::foreground(terminal::brightRed)) << "====================================" << "\n";
-    std::cout << "BATTLE HAS ENDED!" << "\n";
-    std::cout << "WINNERS: ";
-    for (size_t i = 0; i < winners->getPartySize(); i++) { std::cout << (*winners)[i]->getName() << " | "; } 
-    std::cout << "\n";
-    std::cout << "====================================" << "\n\n" << terminal::reset;
+void Combat::endInfo(Party* winners) const {
+	std::cout << ((playerParty.getIsAlive())
+					  ? terminal::foreground(terminal::brightGreen)
+					  : terminal::foreground(terminal::brightRed))
+			  << "====================================" << "\n";
+	std::cout << "BATTLE HAS ENDED!" << "\n";
+	std::cout << "WINNERS: ";
+	for (size_t i = 0; i < winners->getPartySize(); i++) {
+		std::cout << (*winners)[i]->getName() << " | ";
+	}
+	std::cout << "\n";
+	std::cout << "====================================" << "\n\n"
+			  << terminal::reset;
 
-    // TODO - Print XP, LVL, etc. 
-
+	// TODO - Print XP, LVL, etc.
 }
 
 void Combat::battleStart() const {
-    std::cout << "====================================" << "\n";
-    std::cout << "BATTLE HAS BEGUN!" << "\n";
-    // Print Player Party
-    for (size_t i = 0; i < playerParty.getPartySize(); i++) { std::cout << playerParty[i]->getName() << " "; } 
-    std::cout << "\n";
-    std::cout << "VS\n";
-    // Print Enemy Party
-    for (size_t i = 0; i < enemyParty.getPartySize(); i++) { std::cout << enemyParty[i]->getName() << " "; } 
-    std::cout << "\n" << "====================================" << "\n" << "\n";
+	std::cout << "====================================" << "\n";
+	std::cout << "BATTLE HAS BEGUN!" << "\n";
+	// Print Player Party
+	for (size_t i = 0; i < playerParty.getPartySize(); i++) {
+		std::cout << playerParty[i]->getName() << " ";
+	}
+	std::cout << "\n";
+	std::cout << "VS\n";
+	// Print Enemy Party
+	for (size_t i = 0; i < enemyParty.getPartySize(); i++) {
+		std::cout << enemyParty[i]->getName() << " ";
+	}
+	std::cout << "\n" << "====================================" << "\n" << "\n";
 }
 
-void Combat::getValidTargets(const Party& sourceParty, const Party& opposingParty, Character* actingCharacter, Skill* actingSkill) {
-    validTargets.clear();
+void Combat::getValidTargets(const Party& sourceParty,
+							 const Party& opposingParty,
+							 Character* actingCharacter, Skill* actingSkill) {
+	validTargets.clear();
 
-    // bail out early if there is no acting skill; prevents dereferencing garbage
-    if (actingSkill == nullptr) { return; }
-    
-    switch (actingSkill->getTargetType()) {
-        case TargetType::SELF:
-            validTargets.emplace_back(actingCharacter);
-            break;
-        case TargetType::ONE_ALLY:
-        case TargetType::ALL_ALLIES:
-            validTargets = sourceParty.getParty();
-            break;
-        case TargetType::ONE_ENEMY:
-        case TargetType::ALL_ENEMIES:
-            validTargets = opposingParty.getParty();
-            break;
-    }
+	// bail out early if there is no acting skill; prevents dereferencing
+	// garbage
+	if (actingSkill == nullptr) {
+		return;
+	}
 
-    validTargets.erase(
-        std::remove_if(validTargets.begin(), validTargets.end(),
-            [](Character* c) { return c == nullptr || !c->getIsAlive(); }),
-        validTargets.end());
+	switch (actingSkill->getTargetType()) {
+		case TargetType::SELF:
+			validTargets.emplace_back(actingCharacter);
+			break;
+		case TargetType::ONE_ALLY:
+		case TargetType::ALL_ALLIES:
+			validTargets = sourceParty.getParty();
+			break;
+		case TargetType::ONE_ENEMY:
+		case TargetType::ALL_ENEMIES:
+			validTargets = opposingParty.getParty();
+			break;
+	}
+
+	validTargets.erase(std::remove_if(validTargets.begin(), validTargets.end(),
+									  [](Character* c) {
+										  return c == nullptr ||
+												 !c->getIsAlive();
+									  }),
+					   validTargets.end());
 }
 
 Character* Combat::getEnemyTarget(Character* actingSource, Skill* actingSkill) {
-    getValidTargets(enemyParty, playerParty, actingSource, actingSkill);
+	getValidTargets(enemyParty, playerParty, actingSource, actingSkill);
 
-    if (validTargets.empty()) { return nullptr; }
+	if (validTargets.empty()) {
+		return nullptr;
+	}
 
-    // TODO - Make more sophisticated
-    size_t choice = static_cast<size_t>(rand() % validTargets.size());
-    return validTargets[choice];
+	// TODO - Make more sophisticated
+	size_t choice = static_cast<size_t>(rand() % validTargets.size());
+	return validTargets[choice];
 }
 
 // enemy turn
 Skill* Combat::getEnemySkill(Character* source) {
-    const std::vector<Skill*>& skillList = source->getSkills();
-    Skill* pickedSkill;
+	const std::vector<Skill*>& skillList = source->getSkills();
+	Skill* pickedSkill;
 
-    // TODO - Make better (more sophisticated)
-    while(true) {
-        int choice = (rand() % 100) * skillList.size() / 100; // generate choice randomly
-        pickedSkill = skillList[choice];
-        if(pickedSkill->canUse(source)) return pickedSkill;
-    }
+	// TODO - Make better (more sophisticated)
+	while (true) {
+		int choice =
+			(rand() % 100) * skillList.size() / 100; // generate choice randomly
+		pickedSkill = skillList[choice];
+		if (pickedSkill->canUse(source))
+			return pickedSkill;
+	}
 }
 
 void Combat::performAction(Character* source, Character* target, Skill* skill) {
 
-    // decrease resource only if it's not ALL_ALLIES or ALL_ENEMIES target type
-    source->setResource(source->getResource() - skill->getCost());
-    
-    // use skill on target
-    skill->useSkill(source,target);
+	// decrease resource only if it's not ALL_ALLIES or ALL_ENEMIES target type
+	source->setResource(source->getResource() - skill->getCost());
 
-    // check if dead
-    if(target->getHp() <= 0) { target->setIsAlive(false); std::cout << target->getName() << " has fallen!\n"; }
+	// use skill on target
+	skill->useSkill(source, target);
+
+	// check if dead
+	if (target->getHp() <= 0) {
+		target->setIsAlive(false);
+		std::cout << target->getName() << " has fallen!\n";
+	}
 }
 
 void Combat::processTurn() {
 
-    for(size_t i = 0; i < playerParty.getPartySize(); i++) {
-        if(playerParty[i]->getDef() > playerParty[i]->getMaxDef()) {
-            playerParty[i]->setDefense(playerParty[i]->getMaxDef());
-        }
+	for (size_t i = 0; i < playerParty.getPartySize(); i++) {
+		if (playerParty[i]->getDef() > playerParty[i]->getMaxDef()) {
+			playerParty[i]->setDefense(playerParty[i]->getMaxDef());
+		}
 
-        if(playerParty[i]->getAtk() > playerParty[i]->getMaxAtk()) {
-            playerParty[i]->setAttack(playerParty[i]->getMaxAtk());
-        }
+		if (playerParty[i]->getAtk() > playerParty[i]->getMaxAtk()) {
+			playerParty[i]->setAttack(playerParty[i]->getMaxAtk());
+		}
 
-        if(playerParty[i]->getMagic() > playerParty[i]->getMaxMagic()) {
-            playerParty[i]->setMagic(playerParty[i]->getMaxMagic());
-        }
+		if (playerParty[i]->getMagic() > playerParty[i]->getMaxMagic()) {
+			playerParty[i]->setMagic(playerParty[i]->getMaxMagic());
+		}
 
-        if(playerParty[i]->getResistance() > playerParty[i]->getMaxResistance()) {
-            playerParty[i]->setResistance(playerParty[i]->getMaxResistance());
-        }
+		if (playerParty[i]->getResistance() >
+			playerParty[i]->getMaxResistance()) {
+			playerParty[i]->setResistance(playerParty[i]->getMaxResistance());
+		}
 
-        // resource regen
-        playerParty[i]->resourceRegen();
-    }
-    
-    // perform actions
-    while(!actionDeque.empty()) {
-        performAction(
-            actionDeque.front().source,
-            actionDeque.front().target,
-            actionDeque.front().skill
-        );
-        actionDeque.pop_front();
-    }
+		// resource regen
+		playerParty[i]->resourceRegen();
+	}
 
-    for(size_t i = 0; i < enemyParty.getPartySize(); i++) {
-        if(enemyParty[i]->getDef() > enemyParty[i]->getMaxDef()) {
-            enemyParty[i]->setDefense(enemyParty[i]->getMaxDef());
-        }
+	// perform actions
+	while (!actionDeque.empty()) {
+		performAction(actionDeque.front().source, actionDeque.front().target,
+					  actionDeque.front().skill);
+		actionDeque.pop_front();
+	}
 
-        if(enemyParty[i]->getAtk() > enemyParty[i]->getMaxAtk()) {
-            enemyParty[i]->setAttack(enemyParty[i]->getMaxAtk());
-        }
+	for (size_t i = 0; i < enemyParty.getPartySize(); i++) {
+		if (enemyParty[i]->getDef() > enemyParty[i]->getMaxDef()) {
+			enemyParty[i]->setDefense(enemyParty[i]->getMaxDef());
+		}
 
-        if(enemyParty[i]->getMagic() > enemyParty[i]->getMaxMagic()) {
-            enemyParty[i]->setMagic(enemyParty[i]->getMaxMagic());
-        }
+		if (enemyParty[i]->getAtk() > enemyParty[i]->getMaxAtk()) {
+			enemyParty[i]->setAttack(enemyParty[i]->getMaxAtk());
+		}
 
-        if(enemyParty[i]->getResistance() > enemyParty[i]->getMaxResistance()) {
-            enemyParty[i]->setResistance(enemyParty[i]->getMaxResistance());
-        }
+		if (enemyParty[i]->getMagic() > enemyParty[i]->getMaxMagic()) {
+			enemyParty[i]->setMagic(enemyParty[i]->getMaxMagic());
+		}
 
-        // enemyParty[i]->setResource(enemyParty[i]->getResource() + (0.5 * enemyParty[i]->getMaxResource()));
-    }
+		if (enemyParty[i]->getResistance() >
+			enemyParty[i]->getMaxResistance()) {
+			enemyParty[i]->setResistance(enemyParty[i]->getMaxResistance());
+		}
 
-    // get choice from each player party member
-    for(size_t i = 0; i < enemyParty.getPartySize(); i++) {
-        if (!enemyParty[i]->getIsAlive()) { continue; }
+		// enemyParty[i]->setResource(enemyParty[i]->getResource() + (0.5 *
+		// enemyParty[i]->getMaxResource()));
+	}
 
-        Skill* skill = getEnemySkill(enemyParty[i]);
-        Character* target = getEnemyTarget(enemyParty[i], skill);
-        if (target != nullptr) {
-            actionDeque.push_back(Action(enemyParty[i], target, skill));
-        }
-    }
+	// get choice from each player party member
+	for (size_t i = 0; i < enemyParty.getPartySize(); i++) {
+		if (!enemyParty[i]->getIsAlive()) {
+			continue;
+		}
 
-    // perform actions
-    while(!actionDeque.empty()) {
-        performAction(
-            actionDeque.front().source,
-            actionDeque.front().target,
-            actionDeque.front().skill
-        );
-        actionDeque.pop_front();
-    }
+		Skill* skill = getEnemySkill(enemyParty[i]);
+		Character* target = getEnemyTarget(enemyParty[i], skill);
+		if (target != nullptr) {
+			actionDeque.push_back(Action(enemyParty[i], target, skill));
+		}
+	}
+
+	// perform actions
+	while (!actionDeque.empty()) {
+		performAction(actionDeque.front().source, actionDeque.front().target,
+					  actionDeque.front().skill);
+		actionDeque.pop_front();
+	}
 }
 
 bool Combat::endBattle() {
 
-    if (playerParty.getIsAlive()) { 
-        winner = &playerParty; 
-        loser = &enemyParty; 
+	if (playerParty.getIsAlive()) {
+		winner = &playerParty;
+		loser = &enemyParty;
 
-        float expDropped;
-        for (size_t i = 0; i < loser->getPartySize(); i++) {
-            expDropped += (*loser)[i]->getExpDrop();
-        }
+		float expDropped;
+		for (size_t i = 0; i < loser->getPartySize(); i++) {
+			expDropped += (*loser)[i]->getExpDrop();
+		}
 
-        expDropped /= winner->getPartySize();
+		expDropped /= winner->getPartySize();
 
-        for (size_t i = 0; i < winner->getPartySize(); i++) {
-            (*winner)[i]->canLevel(expDropped);
-        }
+		for (size_t i = 0; i < winner->getPartySize(); i++) {
+			(*winner)[i]->canLevel(expDropped);
+		}
 
-        terminal::foreground(terminal::brightGreen);
-        endInfo(winner);
-        return false;
-    }
-    else { 
-        winner = &enemyParty; 
-        loser = &playerParty; 
-        endInfo(winner);
-        return true;
-    }
+		terminal::foreground(terminal::brightGreen);
+		endInfo(winner);
+		return false;
+	} else {
+		winner = &enemyParty;
+		loser = &playerParty;
+		endInfo(winner);
+		return true;
+	}
 }
